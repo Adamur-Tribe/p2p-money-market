@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeFi Money Market | P2P Lending & Borrowing</title>
+  <link rel="stylesheet" href="src/App.css">
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+  <script src="src/App.jsx" type="module" defer></script>
+</head>
+
+<body>
+  <nav>
+    <div class="logo">
+      <svg width="40" height="40" viewBox="0 0 40 40">
+        <circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="2" />
+        <path d="M15 20h10M20 15v10" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      </svg>
+      <span>MoneyMarket</span>
+    </div>
+    <div class="nav-links">
+      <a href="https://example.com/markets">Markets</a>
+      <a href="https://example.com/about">About</a>
+      <a href="https://example.com/docs">Docs</a>
+      <button class="connect-wallet">Connect Wallet</button>
+    </div>
+  </nav>
+
+  <main>
+    <section class="waitlist">
+      <div class="waitlist-container">
+        <h2>Join the Waitlist</h2>
+        <p>Be among the first to access our platform when we launch</p>
+        <form id="waitlistForm" class="waitlist-form">
+          <div class="form-group">
+            <input type="email" id="email" placeholder="Enter your email" required>
+            <select id="userType" required>
+              <option value="">Select your interest</option>
+              <option value="lender">Lender</option>
+              <option value="borrower">Borrower</option>
+              <option value="both">Both</option>
+            </select>
+          </div>
+          <button type="submit" class="primary waitlist-submit">Join Waitlist</button>
+        </form>
+        <div id="waitlistMessage" class="waitlist-message"></div>
+      </div>
+    </section>
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Peer-to-Peer Money Markets</h1>
+        <h2>Lend, borrow, and earn yield in a decentralized way</h2>
+        <div class="cta-buttons">
+          <button class="primary">Start Lending</button>
+          <button class="secondary">Start Borrowing</button>
+        </div>
+      </div>
+      <div class="hero-graphic">
+        <div class="floating-cards">
+          <div class="market-card">
+            <div class="market-header">USDC Market</div>
+            <div class="market-stats">
+              <div class="stat">
+                <span class="label">Supply APY</span>
+                <span class="value">4.23%</span>
+              </div>
+              <div class="stat">
+                <span class="label">Total Supply</span>
+                <span class="value">$42.5M</span>
+              </div>
+            </div>
+          </div>
+          <div class="market-card">
+            <div class="market-header">ETH Market</div>
+            <div class="market-stats">
+              <div class="stat">
+                <span class="label">Borrow APR</span>
+                <span class="value">3.12%</span>
+              </div>
+              <div class="stat">
+                <span class="label">Total Borrows</span>
+                <span class="value">$28.1M</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features">
+      <h2>Why Choose Our Platform?</h2>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="32" height="32" viewBox="0 0 32 32">
+              <path d="M16 2L4 8v16l12 6 12-6V8L16 2z" fill="none" stroke="currentColor" stroke-width="2" />
+              <path d="M16 16l12-8M16 16L4 8M16 16v16" stroke="currentColor" stroke-width="2" />
+            </svg>
+          </div>
+          <h3>Secure & Decentralized</h3>
+          <p>Built on battle-tested smart contracts with regular audits</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="32" height="32" viewBox="0 0 32 32">
+              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2" />
+              <path d="M16 8v8l6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </div>
+          <h3>24/7 Markets</h3>
+          <p>Access liquidity around the clock with real-time rates</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="32" height="32" viewBox="0 0 32 32">
+              <path d="M6 22h20M6 16h20M6 10h20" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </div>
+          <h3>Multiple Assets</h3>
+          <p>Support for major cryptocurrencies and stablecoins</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats">
+      <div class="stat-card">
+        <div class="stat-value">$156M+</div>
+        <div class="stat-label">Total Value Locked</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">45K+</div>
+        <div class="stat-label">Active Users</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">$2.8M+</div>
+        <div class="stat-label">Interest Earned</div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>MoneyMarket</h4>
+        <p>Decentralized lending and borrowing protocol</p>
+      </div>
+      <div class="footer-section">
+        <h4>Resources</h4>
+        <a href="https://example.com/docs">Documentation</a>
+        <a href="https://example.com/whitepaper">Whitepaper</a>
+        <a href="https://example.com/github">GitHub</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://discord.gg/example">Discord</a>
+        <a href="https://twitter.com/example">Twitter</a>
+        <a href="https://t.me/example">Telegram</a>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>
