@@ -2,7 +2,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DeFi Money Market | P2P Lending & Borrowing</title>
+  <title>P2P Money Market Lending & Borrowing</title>
   <link rel="stylesheet" href="/static/home.css">
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
@@ -13,24 +13,15 @@
   <div class="top-bar">
     <div class="container">
       <div class="top-contact">
-        <a href="tel:+1234567890">Support: +1 234 567 890</a>
-        <a href="mailto:support@defimarket.com">Email: support@defimarket.com</a>
+        <a href="tel:+1234567890">Support: +254 768744700</a>
+        <a href="mailto:support@defimarket.com">Email: victorpaularony@gmail.com</a>
       </div>
       <div class="top-links">
-        <a href="#careers">Careers</a>
+        <a href="#twit">Careers</a>
         <a href="#contact">Contact</a>
         <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-          <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <circle cx="12" cy="12" r="5"/>
-            <line x1="12" y1="1" x2="12" y2="3"/>
-            <line x1="12" y1="21" x2="12" y2="23"/>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-            <line x1="1" y1="12" x2="3" y2="12"/>
-            <line x1="21" y1="12" x2="23" y2="12"/>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-          </svg>
+          <img src="https://cdn.jsdelivr.net/npm/@tabler/icons@2.42.0/icons/sun.svg" class="sun-icon" alt="Light mode">
+          <img src="https://cdn.jsdelivr.net/npm/@tabler/icons@2.42.0/icons/moon.svg" class="moon-icon" alt="Dark mode">
         </button>
       </div>
     </div>
@@ -46,10 +37,10 @@
         <span>MoneyMarket</span>
       </div>
       <div class="nav-links">
-        <a href="#personal">Personal</a>
-        <a href="#business">Business</a>
-        <a href="#markets">Markets</a>
-        <a href="#about">About</a>
+        <a href="#waitlist-section">Personal</a>
+        <a href="#waitlist-section">Business</a>
+        <a href="#waitlist-section">Markets</a>
+        <a href="#waitlist-section">About</a>
         <button class="connect-wallet">Connect Wallet</button>
       </div>
       <button class="mobile-menu-btn">
@@ -64,25 +55,25 @@
     <section class="hero-slider">
       <div class="swiper">
         <div class="swiper-wrapper">
-          <div class="swiper-slide">
+          <div class="swiper-slide" style="background-image: url('/static/money-market-funds.webp')">
             <div class="slide-content">
               <h1>Experience Next-Gen DeFi Banking</h1>
               <p>Lend, borrow, and earn yield with institutional-grade security</p>
-              <button class="primary">Get Started</button>
+              <a href="#waitlist-section" class="primary">Get Started</a>
             </div>
           </div>
-          <div class="swiper-slide">
+          <div class="swiper-slide" style="background-image: url('/static/photo.jpg')">
             <div class="slide-content">
               <h1>Earn Up to 8% APY</h1>
               <p>Supply liquidity and earn competitive yields on your assets</p>
-              <button class="primary">Start Earning</button>
+              <a href="#waitlist-section" class="primary">Start Earning</a>
             </div>
           </div>
-          <div class="swiper-slide">
+          <div class="swiper-slide" style="background-image: url('https://images.unsplash.com/photo-1559526324-593bc073d938?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80')">
             <div class="slide-content">
               <h1>Borrow at Competitive Rates</h1>
               <p>Access instant liquidity without selling your assets</p>
-              <button class="primary">Learn More</button>
+              <a href="#waitlist-section" class="primary">Learn More</a>
             </div>
           </div>
         </div>
@@ -93,22 +84,22 @@
     <section class="quick-actions">
       <div class="container">
         <div class="action-grid">
-          <a href="#" class="action-card">
+          <a href="#waitlist-section" class="action-card">
             <div class="action-icon">💰</div>
             <h3>Lend Assets</h3>
             <p>Supply crypto assets and earn yield</p>
           </a>
-          <a href="#" class="action-card">
+          <a href="#waitlist-section" class="action-card">
             <div class="action-icon">🏦</div>
             <h3>Borrow</h3>
             <p>Get instant crypto loans</p>
           </a>
-          <a href="#" class="action-card">
+          <a href="#waitlist-section" class="action-card">
             <div class="action-icon">📈</div>
             <h3>Markets</h3>
             <p>View current rates and stats</p>
           </a>
-          <a href="#" class="action-card">
+          <a href="#waitlist-section" class="action-card">
             <div class="action-icon">🎯</div>
             <h3>Join Waitlist</h3>
             <p>Be first to access our platform</p>
@@ -117,7 +108,7 @@
       </div>
     </section>
 
-    <section class="waitlist">
+    <section class="waitlist" id="waitlist-section">
       <div class="waitlist-content">
         <h2>Join the Waitlist</h2>
         <p>Be the first to access our platform when we launch</p>
@@ -170,7 +161,7 @@
       </div>
     </section>
 
-    <section class="stats">
+    <!-- <section class="stats">
       <div class="stat-card">
         <div class="stat-value">$156M+</div>
         <div class="stat-label">Total Value Locked</div>
@@ -183,7 +174,7 @@
         <div class="stat-value">$2.8M+</div>
         <div class="stat-label">Interest Earned</div>
       </div>
-    </section>
+    </section> -->
   </main>
 
   <footer>
@@ -194,14 +185,14 @@
       </div>
       <div class="footer-section">
         <h4>Resources</h4>
-        <a href="#">Documentation</a>
-        <a href="#">Whitepaper</a>
-        <a href="#"">GitHub</a>
+        <a href="https://github.com/VictorPaulArony">Documentation</a>
+        <a href="https://github.com/VictorPaulArony">Whitepaper</a>
+        <a href="https://github.com/VictorPaulArony">GitHub</a>
       </div>
       <div class="footer-section">
         <h4>Community</h4>
-        <a href="#">Discord</a>
-        <a href="#">Twitter</a>
+        <a href="@viarony">Discord</a>
+        <a href="#twit">Twitter</a>
         <a href="#">Telegram</a>
       </div>
     </div>
