@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Chamas - DeFi Banking</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body class="light-mode">
+    <div class="theme-toggle">
+        <button onclick="toggleTheme()" id="themeToggle">🌙</button>
+    </div>
+    <div class="container">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h2>DeFi Banking</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="chamas.html" class="nav-link"><i class="icon">👥</i> My Chamas</a></li>
+                <li><a href="wallet.html" class="nav-link"><i class="icon">💰</i> Wallet</a></li>
+                <li><a href="assets.html" class="nav-link"><i class="icon">🔒</i> Locked Assets</a></li>
+                <li><a href="funds.html" class="nav-link"><i class="icon">📊</i> Money Market Funds</a></li>
+                <li><a href="transactions.html" class="nav-link"><i class="icon">🤝</i> P2P Transactions</a></li>
+                <li><a href="loans.html" class="nav-link"><i class="icon">💳</i> Loans</a></li>
+            </ul>
+        </nav>
+        
+        <main class="main-content">
+            <h1>My Chamas</h1>
+            
+            <div class="cards-grid">
+                <div class="card">
+                    <h3>Create New Chama</h3>
+                    <p>Start your own investment group</p>
+                    <button onclick="createChama()">Create Chama</button>
+                </div>
+
+                <div class="card">
+                    <h3>Tech Investors Group</h3>
+                    <p>Members: 15 | Balance: 5 ETH</p>
+                    <button onclick="viewChama('tech')">View Details</button>
+                </div>
+
+                <div class="card">
+                    <h3>Real Estate Fund</h3>
+                    <p>Members: 25 | Balance: 12 ETH</p>
+                    <button onclick="viewChama('realestate')">View Details</button>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="/static/account.js"></script>
+</body>
+</html>
