@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Money Market Funds - DeFi Banking</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body class="light-mode">
+    <div class="theme-toggle">
+        <button onclick="toggleTheme()" id="themeToggle">🌙</button>
+    </div>
+    <div class="container">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h2>DeFi Banking</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="chamas.html" class="nav-link"><i class="icon">👥</i> My Chamas</a></li>
+                <li><a href="wallet.html" class="nav-link"><i class="icon">💰</i> Wallet</a></li>
+                <li><a href="assets.html" class="nav-link"><i class="icon">🔒</i> Locked Assets</a></li>
+                <li><a href="funds.html" class="nav-link"><i class="icon">📊</i> Money Market Funds</a></li>
+                <li><a href="transactions.html" class="nav-link"><i class="icon">🤝</i> P2P Transactions</a></li>
+                <li><a href="loans.html" class="nav-link"><i class="icon">💳</i> Loans</a></li>
+            </ul>
+        </nav>
+        
+        <main class="main-content">
+            <h1>Money Market Funds</h1>
+            
+            <div class="cards-grid">
+                <div class="card">
+                    <h3>Stable Yield Fund</h3>
+                    <p>APY: 8.5%</p>
+                    <p>Total Value: $5M</p>
+                    <button onclick="investInFund('stable')">Invest</button>
+                </div>
+
+                <div class="card">
+                    <h3>High Yield Fund</h3>
+                    <p>APY: 12.3%</p>
+                    <p>Total Value: $2.8M</p>
+                    <button onclick="investInFund('high')">Invest</button>
+                </div>
+
+                <div class="card">
+                    <h3>My Investments</h3>
+                    <p>View your fund investments</p>
+                    <button onclick="viewInvestments()">View Details</button>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="/static/account.js"></script>
+</body>
+</html>
