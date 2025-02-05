@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,11 +8,17 @@
     <link rel="stylesheet" href="/static/styles.css">
     <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
 </head>
+
 <body class="light-mode">
-    <div class="theme-toggle">
-        <button onclick="toggleTheme()" id="themeToggle">🌙</button>
+    <div class="navs">
+        <div class="theme-toggle">
+            <button onclick="toggleTheme()" id="themeToggle">🌙</button>
+        </div>
+        <div class="wallet">
+            <button class="connect-wallet">Connect Wallet</button>
+        </div>
     </div>
-    
+
     <div class="container">
         <nav class="sidebar">
             <div class="sidebar-header">
@@ -26,10 +33,10 @@
                 <li><a href="loans.html" class="nav-link"><i class="icon">💳</i> Loans</a></li>
             </ul>
         </nav>
-        
+
         <main class="main-content">
             <h1>Welcome to DeFi Banking</h1>
-            
+
             <div class="cards-grid">
                 <div class="card">
                     <h3>Chamas</h3>
@@ -66,4 +73,5 @@
 
     <script src="/static/account.js"></script>
 </body>
+
 </html>
