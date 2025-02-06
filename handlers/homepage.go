@@ -1,11 +1,7 @@
 package handlers
 
 import (
-	"log"
 	"net/http"
-	"text/template"
-
-	"p2p-money-market/structs"
 )
 
 // /function to handle the main landing page
@@ -14,25 +10,24 @@ func HandleLandingPage(w http.ResponseWriter, r *http.Request) {
 		ErrorHandler(w, http.StatusNotFound)
 		return
 	}
-	temp, err := template.ParseFiles("template/index.html")
-	if err != nil {
-		ErrorHandler(w, http.StatusInternalServerError)
+	if r.Method == http.MethodGet {
+		RenderTemplates(w, "index.html", nil)
 		return
 	}
-	temp.Execute(w, nil)
+	// temp, err := template.ParseFiles("template/index.html")
+	// if err != nil {
+	// 	ErrorHandler(w, http.StatusInternalServerError)
+	// 	return
+	// }
+	// temp.Execute(w, nil)
 }
 
-// function to handle the errors and error pages
-func ErrorHandler(w http.ResponseWriter, code int) {
-	w.WriteHeader(code)
-	temp, err := template.ParseFiles("template/error.html")
-	if err != nil {
-		log.Fatalln(err)
+// function to handle the bank interface
+func HandleBankAccount(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodGet {
+		RenderTemplates(w, "accountPage.html", nil)
 		return
 	}
-
-	data := structs.Codes{
-		Code: code,
+	if r.Method == http.MethodPost {
 	}
-	temp.Execute(w, data)
 }
