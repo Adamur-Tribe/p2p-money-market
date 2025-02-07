@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>transactions</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+
+<body>
+    <h2>My Wallet</h2>
+    
+    <div class="navs">
+        <div class="theme-toggle">
+            <button onclick="toggleTheme()" id="themeToggle">🌙</button>
+        </div>
+        <div class="wallet">
+            <button id="connect-wallet">Connect Wallet</button>
+        </div>
+    </div>
+    <!-- <button id="connect-wallet">Connect Wallet</button> -->
+    <p>Wallet Address: <span id="wallet-address">Not connected</span></p>
+    <p>Balance: <span id="wallet-balance">0 ETH</span></p>
+    
+    <select id="currency-select">
+        <option value="ETH">ETH</option>
+        <option value="USD">USD</option>
+        <option value="KSH">KSH</option>
+    </select>
+    
+    <h3>Switch Network</h3>
+    <select id="network-select"></select>
+    
+    <h3>Add Custom Network</h3>
+    <form id="custom-network-form">
+        <input type="text" id="custom-chain-id" placeholder="Chain ID" required>
+        <input type="text" id="custom-chain-name" placeholder="Network Name" required>
+        <input type="text" id="custom-rpc-url" placeholder="RPC URL" required>
+        <input type="text" id="custom-currency-symbol" placeholder="Currency Symbol" required>
+        <input type="text" id="custom-block-explorer" placeholder="Block Explorer URL">
+        <button type="submit">Add Network</button>
+    </form>
+    
+    <h3>Send Crypto</h3>
+    <input type="text" id="recipient-address" placeholder="Recipient Address">
+    <input type="number" id="send-amount" placeholder="Amount">
+    <button id="send-crypto">Send Crypto</button>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+    <script src="/static/account.js"></script>
+
+</body>
+
+</html>
