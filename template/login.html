@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instagram-like Auth</title>
+    <title>login</title>
     <link rel="stylesheet" href="/static/style.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
 </head>
 
@@ -33,7 +34,13 @@
             <button type="submit">Sign Up</button>
         </form>
     </div>
-     
+
+    <div id="login-success-message" class="hidden">
+        <p>Login successful! Please connect your wallet before proceeding.</p>
+        <button id="connect-wallet">Connect Wallet</button>
+    </div>
+
+
     <footer class="site-footer">
         <div class="footer-content">
             <div class="footer-links">
@@ -47,6 +54,63 @@
             </div>
         </div>
     </footer>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const loginForm = document.getElementById("login-form");
+            const successMessage = document.getElementById("login-success-message");
+            const connectWalletBtn = document.getElementById("connect-wallet");
+
+            // Handle login form submission
+            loginForm.addEventListener("submit", async (event) => {
+                event.preventDefault(); // Prevent form from immediately redirecting
+
+                const formData = new FormData(loginForm);
+
+                try {
+                    const response = await fetch("/login", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded",
+                        },
+                        body: new URLSearchParams(new FormData(loginForm)).toString(),
+                    });
+
+                    const data = await response.json();
+                    console.log("Server Response:", data); // Log the response for debugging
+
+                    if (response.ok && data.message === "Login successful") {
+                        // Show success message
+                        successMessage.classList.remove("hidden");
+
+                        // Hide login form
+                        loginForm.classList.add("hidden");
+                    } else {
+                        alert(data.message || "Invalid username or password. Please try again.");
+                    }
+                } catch (error) {
+                    console.error("Fetch error:", error);
+                    alert("An error occurred while logging in. Please try again.");
+                }
+            });
+
+            // Handle wallet connection
+            connectWalletBtn.addEventListener("click", async () => {
+                if (typeof window.ethereum !== "undefined") {
+                    try {
+                        await window.ethereum.request({ method: "eth_requestAccounts" });
+                        alert("Wallet connected! Redirecting to your account...");
+                        window.location.href = "/account";
+                    } catch (error) {
+                        console.error(error);
+                        alert("Failed to connect wallet. Please try again.");
+                    }
+                } else {
+                    alert("Please install MetaMask to connect your wallet!");
+                }
+            });
+        });
+    </script>
+
     <script src="/static/script.js"></script>
     <script src="/static/account.js"></script>
 </body>

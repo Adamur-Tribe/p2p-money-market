@@ -91,20 +91,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   });
 });
 
-// Connect wallet button
-const connectWalletBtn = document.querySelector('.connect-wallet');
-connectWalletBtn.addEventListener('click', async () => {
-  if (typeof window.ethereum !== 'undefined') {
-    try {
-      await window.ethereum.request({ method: 'eth_requestAccounts' });
-      connectWalletBtn.textContent = 'Connected';
-    } catch (error) {
-      console.error(error);
-    }
-  } else {
-    alert('Please install MetaMask to connect your wallet!');
-  }
-});
+
 
 // Animate elements on scroll
 gsap.from('.feature-card', {
