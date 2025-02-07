@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction History</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        label { display: block; margin-bottom: 8px; }
+        input, select { width: 100%; padding: 8px; margin-bottom: 16px; }
+        button { padding: 10px 20px; background-color: #007bff; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .transactions { margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #f4f4f4; }
+        a { color: #007bff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>View Transaction History</h1>
+        <label for="address">Wallet Address:</label>
+        <input type="text" id="address" placeholder="Enter wallet address">
+        
+        <label for="network">Select Network:</label>
+        <select id="network">
+            <option value="mainnet">Ethereum Mainnet</option>
+            <option value="sepolia">Sepolia Testnet</option>
+            <option value="polygon">Polygon (Matic)</option>
+            <option value="bsc">Binance Smart Chain (BSC)</option>
+            <option value="lisk">Lisk</option>
+        </select>
+        
+        <button onclick="fetchTransactions()">Fetch Transactions</button>
+        
+        <div class="transactions" id="transactions">
+            <!-- Transaction history will be displayed here -->
+            <table id="transaction-table">
+                <thead>
+                    <tr>
+                        <th>Tx Hash</th>
+                        <th>Type</th>
+                        <th>Block</th>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Value</th>
+                        <th>Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Transaction rows will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        async function fetchTransactions() {
+            const address = document.getElementById('address').value;
+            const network = document.getElementById('network').value;
+            const apiKey = 'UB4WTJGMQEUNENGY9CKWMBG2BTWXAHQRYI'; // Replace with your API key (if required)
+
+            let apiUrl;
+            switch (network) {
+                case 'mainnet':
+                    apiUrl = `https://api.etherscan.io/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&sort=asc&apikey=${apiKey}`;
+                    break;
+                case 'sepolia':
+                    apiUrl = `https://api-sepolia.etherscan.io/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&sort=asc&apikey=${apiKey}`;
+                    break;
+                case 'polygon':
+                    apiUrl = `https://api.polygonscan.com/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&sort=asc&apikey=${apiKey}`;
+                    break;
+                case 'bsc':
+                    apiUrl = `https://api.bscscan.com/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&sort=asc&apikey=${apiKey}`;
+                    break;
+                case 'lisk':
+                    apiUrl = `https://api.lisk.com/api/v2/accounts/${address}/transactions`;
+                    break;
+                default:
+                    alert('Unsupported network');
+                    return;
+            }
+
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                if (network === 'lisk') {
+                    if (data.data) {
+                        displayLiskTransactions(data.data);
+                    } else {
+                        document.getElementById('transactions').innerHTML = `<p>Error: ${data.message || 'No transactions found'}</p>`;
+                    }
+                } else {
+                    if (data.status === '1') {
+                        displayTransactions(data.result, network);
+                    } else {
+                        document.getElementById('transactions').innerHTML = `<p>Error: ${data.message}</p>`;
+                    }
+                }
+            } catch (error) {
+                document.getElementById('transactions').innerHTML = `<p>Error fetching transactions: ${error.message}</p>`;
+            }
+        }
+
+        function displayTransactions(transactions, network) {
+            const tableBody = document.getElementById('transaction-table').querySelector('tbody');
+            tableBody.innerHTML = ''; // Clear existing rows
+
+            if (transactions.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="7">No transactions found.</td></tr>';
+                return;
+            }
+
+            transactions.forEach(tx => {
+                const type = getTransactionType(tx);
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><a href="https://${network === 'bsc' ? 'bscscan.com' : network === 'polygon' ? 'polygonscan.com' : 'etherscan.io'}/tx/${tx.hash}" target="_blank">${tx.hash.substring(0, 10)}...</a></td>
+                    <td>${type}</td>
+                    <td>${tx.blockNumber}</td>
+                    <td>${tx.from}</td>
+                    <td>${tx.to || 'Contract Creation'}</td>
+                    <td>${parseInt(tx.value) / 1e18} ${network === 'bsc' ? 'BNB' : network === 'polygon' ? 'MATIC' : 'ETH'}</td>
+                    <td>${new Date(tx.timeStamp * 1000).toLocaleString()}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function displayLiskTransactions(transactions) {
+            const tableBody = document.getElementById('transaction-table').querySelector('tbody');
+            tableBody.innerHTML = ''; // Clear existing rows
+
+            if (transactions.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="7">No transactions found.</td></tr>';
+                return;
+            }
+
+            transactions.forEach(tx => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><a href="https://liskscan.com/transaction/${tx.id}" target="_blank">${tx.id.substring(0, 10)}...</a></td>
+                    <td>${tx.type}</td>
+                    <td>${tx.blockId}</td>
+                    <td>${tx.senderId}</td>
+                    <td>${tx.recipientId}</td>
+                    <td>${tx.amount / 1e8} LSK</td>
+                    <td>${new Date(tx.timestamp * 1000).toLocaleString()}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function getTransactionType(tx) {
+            if (tx.input === '0x') {
+                return 'Transfer';
+            } else if (tx.to === null || tx.to === '') {
+                return 'Contract Creation';
+            } else {
+                return 'Contract Call';
+            }
+        }
+    </script>
+</body>
+</html>
