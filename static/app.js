@@ -1,49 +1,20 @@
-import { gsap } from "https://cdn.jsdelivr.net/npm/gsap@3.12.2/+esm";
 
 // Theme toggle functionality
-const themeToggle = document.getElementById('themeToggle');
-const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
 
-// Set initial theme based on user's system preference
-document.body.setAttribute('data-theme', prefersDarkScheme.matches ? 'dark' : 'light');
+function toggleTheme() {
+  const body = document.body;
+  const themeToggle = document.getElementById('themeToggle');
 
-// Update theme toggle icon
-function updateThemeIcon(isDark) {
-  themeToggle.innerHTML = isDark ? `
-    <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-      <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
-    </svg>
-  ` : `
-    <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-      <circle cx="12" cy="12" r="5"/>
-      <line x1="12" y1="1" x2="12" y2="3"/>
-      <line x1="12" y1="21" x2="12" y2="23"/>
-      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-      <line x1="1" y1="12" x2="3" y2="12"/>
-      <line x1="21" y1="12" x2="23" y2="12"/>
-      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-    </svg>
-  `;
+  if (body.getAttribute('data-theme') === 'dark') {
+      body.setAttribute('data-theme', 'light');
+      localStorage.setItem('theme', 'light');
+      themeToggle.textContent = '🌙';
+  } else {
+      body.setAttribute('data-theme', 'dark');
+      localStorage.setItem('theme', 'dark');
+      themeToggle.textContent = '☀️';
+  }
 }
-
-// Initial icon update
-updateThemeIcon(prefersDarkScheme.matches);
-
-// Theme toggle click handler
-themeToggle.addEventListener('click', () => {
-  const currentTheme = document.body.getAttribute('data-theme');
-  const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-  document.body.setAttribute('data-theme', newTheme);
-  updateThemeIcon(newTheme === 'dark');
-});
-
-// Listen for system theme changes
-prefersDarkScheme.addEventListener('change', (e) => {
-  document.body.setAttribute('data-theme', e.matches ? 'dark' : 'light');
-  updateThemeIcon(e.matches);
-});
 
 // Animate market cards
 const cards = document.querySelectorAll('.market-card');
