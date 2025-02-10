@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
   <script src="/static/app.js" type="module" defer></script>
 </head>
-<body>
+<body class="light-mode">
   <div class="top-bar">
     <div class="container">
       <div class="top-contact">
@@ -19,11 +19,11 @@
       <div class="top-links">
         <a href="#twit">Careers</a>
         <a href="#contact">Contact</a>
-        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-          <img src="https://cdn.jsdelivr.net/npm/@tabler/icons@2.42.0/icons/sun.svg" class="sun-icon" alt="Light mode">
-          <img src="https://cdn.jsdelivr.net/npm/@tabler/icons@2.42.0/icons/moon.svg" class="moon-icon" alt="Dark mode">
-        </button>
+       
       </div>
+      <div class="theme-toggle">
+        <button onclick="toggleTheme()" id="themeToggle">🌙</button>
+    </div>
     </div>
   </div>
 
@@ -194,5 +194,6 @@
       </div>
     </div>
   </footer>
+  <script src="/static/account.js"></script>
 </body>
 </html>
