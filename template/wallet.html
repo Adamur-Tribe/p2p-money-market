@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>transactions</title>
+    <title>Transactions</title>
     <link rel="stylesheet" href="/static/styles.css">
 </head>
 
 <body>
     <h2>My Wallet</h2>
-    
+
     <div class="navs">
         <div class="theme-toggle">
             <button onclick="toggleTheme()" id="themeToggle">🌙</button>
@@ -19,19 +19,19 @@
             <button id="connect-wallet">Connect Wallet</button>
         </div>
     </div>
-    <!-- <button id="connect-wallet">Connect Wallet</button> -->
+
     <p>Wallet Address: <span id="wallet-address">Not connected</span></p>
     <p>Balance: <span id="wallet-balance">0 ETH</span></p>
-    
+
     <select id="currency-select">
         <option value="ETH">ETH</option>
         <option value="USD">USD</option>
         <option value="KSH">KSH</option>
     </select>
-    
+
     <h3>Switch Network</h3>
     <select id="network-select"></select>
-    
+
     <h3>Add Custom Network</h3>
     <form id="custom-network-form">
         <input type="text" id="custom-chain-id" placeholder="Chain ID" required>
@@ -41,12 +41,121 @@
         <input type="text" id="custom-block-explorer" placeholder="Block Explorer URL">
         <button type="submit">Add Network</button>
     </form>
-    
+
     <h3>Send Crypto</h3>
     <input type="text" id="recipient-address" placeholder="Recipient Address">
     <input type="number" id="send-amount" placeholder="Amount">
     <button id="send-crypto">Send Crypto</button>
-    
+    <script>
+     document.addEventListener('DOMContentLoaded', () => {
+    const connectWalletButton = document.getElementById('connect-wallet');
+    const walletAddressSpan = document.getElementById('wallet-address');
+    const walletBalanceSpan = document.getElementById('wallet-balance');
+    const networkSelect = document.getElementById('network-select');
+
+    // Check if MetaMask is installed
+    if (typeof window.ethereum === 'undefined') {
+        alert('Please install MetaMask to use this feature.');
+        return;
+    }
+
+    const ethereum = window.ethereum;
+    let web3;
+
+    // Connect Wallet
+    connectWalletButton.addEventListener('click', async () => {
+        try {
+            const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+            const account = accounts[0];
+            walletAddressSpan.textContent = account;
+
+            // Initialize Web3
+            web3 = new Web3(ethereum);
+
+            // Fetch balance
+            const balance = await web3.eth.getBalance(account);
+            walletBalanceSpan.textContent = `${web3.utils.fromWei(balance, 'ether')} ETH`;
+
+            // Load networks
+            loadNetworks();
+        } catch (error) {
+            console.error('Error connecting to MetaMask:', error);
+        }
+    });
+
+    // Load Networks
+    async function loadNetworks() {
+        try {
+            const chainId = await ethereum.request({ method: 'eth_chainId' });
+            const networks = await ethereum.request({ method: 'wallet_getPermissions' });
+
+            // Clear existing options
+            networkSelect.innerHTML = '';
+
+            // Add networks to the dropdown
+            networks[0].caveats[0].value.forEach(network => {
+                const option = document.createElement('option');
+                option.value = network.chainId;
+                option.textContent = network.chainName;
+                if (network.chainId === chainId) {
+                    option.selected = true;
+                }
+                networkSelect.appendChild(option);
+            });
+
+            // Handle network switch
+            networkSelect.addEventListener('change', async (event) => {
+                const selectedChainId = event.target.value;
+                try {
+                    await ethereum.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: selectedChainId }],
+                    });
+                    alert(`Switched to network with Chain ID: ${selectedChainId}`);
+                } catch (error) {
+                    console.error('Error switching network:', error);
+                }
+            });
+        } catch (error) {
+            console.error('Error loading networks:', error);
+        }
+    }
+
+    // Add Custom Network
+    const customNetworkForm = document.getElementById('custom-network-form');
+    customNetworkForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const chainId = document.getElementById('custom-chain-id').value;
+        const chainName = document.getElementById('custom-chain-name').value;
+        const rpcUrl = document.getElementById('custom-rpc-url').value;
+        const currencySymbol = document.getElementById('custom-currency-symbol').value;
+        const blockExplorerUrl = document.getElementById('custom-block-explorer').value;
+
+        try {
+            await ethereum.request({
+                method: 'wallet_addEthereumChain',
+                params: [{
+                    chainId: chainId,
+                    chainName: chainName,
+                    nativeCurrency: {
+                        name: currencySymbol,
+                        symbol: currencySymbol,
+                        decimals: 18,
+                    },
+                    rpcUrls: [rpcUrl],
+                    blockExplorerUrls: [blockExplorerUrl],
+                }],
+            });
+            alert('Custom network added successfully!');
+            loadNetworks(); // Reload networks
+        } catch (error) {
+            console.error('Error adding custom network:', error);
+        }
+    });
+});
+    </script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <script src="/static/account.js"></script>
 
