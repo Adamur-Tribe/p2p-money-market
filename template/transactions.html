@@ -1,61 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transaction History</title>
-    <!-- <link rel="stylesheet" href="/static/style.css"> -->
-    <style>
-        body { font-family: Arial, sans-serif; }
-        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
-        label { display: block; margin-bottom: 8px; }
-        input, select { width: 100%; padding: 8px; margin-bottom: 16px; }
-        button { padding: 10px 20px; background-color: #007bff; color: white; border: none; cursor: pointer; }
-        button:hover { background-color: #0056b3; }
-        .transactions { margin-top: 20px; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
-        th { background-color: #f4f4f4; }
-        a { color: #007bff; text-decoration: none; }
-        a:hover { text-decoration: underline; }
-    </style>
+    <link rel="stylesheet" href="/static/tx.css">
+
 </head>
-<body>
+
+<body class="light-mode">
+    <div class="theme-toggle">
+        <button onclick="toggleTheme()" id="themeToggle">🌙</button>
+    </div>
+    <div class="wallet">
+        <button class="connect-wallet">Connect Wallet</button>
+    </div>
     <div class="container">
-        <h1>View Transaction History</h1>
-        <label for="address">Wallet Address:</label>
-        <input type="text" id="address" placeholder="Enter wallet address">
-        
-        <label for="network">Select Network:</label>
-        <select id="network">
-            <option value="mainnet">Ethereum Mainnet</option>
-            <option value="sepolia">Sepolia Testnet</option>
-            <option value="polygon">Polygon (Matic)</option>
-            <option value="bsc">Binance Smart Chain (BSC)</option>
-            <option value="lisk">Lisk</option>
-        </select>
-        
-        <button onclick="fetchTransactions()">Fetch Transactions</button>
-        
-        <div class="transactions" id="transactions">
-            <!-- Transaction history will be displayed here -->
-            <table id="transaction-table">
-                <thead>
-                    <tr>
-                        <th>Tx Hash</th>
-                        <th>Type</th>
-                        <th>Block</th>
-                        <th>From</th>
-                        <th>To</th>
-                        <th>Value</th>
-                        <th>Timestamp</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Transaction rows will be dynamically inserted here -->
-                </tbody>
-            </table>
-        </div>
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h2>DeFi Banking</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="chamas.html" class="nav-link"><i class="icon">👥</i> My Chamas</a></li>
+                <li><a href="wallet.html" class="nav-link"><i class="icon">💰</i> Wallet</a></li>
+                <li><a href="assets.html" class="nav-link"><i class="icon">🔒</i> Locked Assets</a></li>
+                <li><a href="funds.html" class="nav-link"><i class="icon">📊</i> Money Market Funds</a></li>
+                <li><a href="transactions.html" class="nav-link"><i class="icon">🤝</i> P2P Transactions</a></li>
+                <li><a href="loans.html" class="nav-link"><i class="icon">💳</i> Loans</a></li>
+            </ul>
+        </nav>
+        <main class="main-content">
+            <h1>View Transaction History</h1>
+            <label for="address">Wallet Address:</label>
+            <input type="text" id="address" placeholder="Enter wallet address">
+
+            <label for="network">Select Network:</label>
+            <select id="network">
+                <option value="mainnet">Ethereum Mainnet</option>
+                <option value="sepolia">Sepolia Testnet</option>
+                <option value="polygon">Polygon (Matic)</option>
+                <option value="bsc">Binance Smart Chain (BSC)</option>
+                <option value="lisk">Lisk</option>
+            </select>
+
+            <button onclick="fetchTransactions()">Fetch Transactions</button>
+
+            <div class="transactions" id="transactions">
+                <!-- Transaction history  -->
+                <table id="transaction-table">
+                    <thead>
+                        <tr>
+                            <th>Tx Hash</th>
+                            <th>Type</th>
+                            <th>Block</th>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>Value</th>
+                            <th>Timestamp</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Transaction rows -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
     </div>
 
     <script>
@@ -168,4 +178,5 @@
         }
     </script>
 </body>
+
 </html>
