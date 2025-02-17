@@ -1,14 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loans - DeFi Banking</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <title>Loan Management Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/4.1.1/web3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+    <link rel="stylesheet" href="/static/loan.css">
 </head>
+
 <body class="light-mode">
     <div class="theme-toggle">
         <button onclick="toggleTheme()" id="themeToggle">🌙</button>
+    </div>
+    <div class="wallet">
+        <button class="connect-wallet">Connect Wallet</button>
     </div>
     <div class="container">
         <nav class="sidebar">
@@ -24,35 +31,54 @@
                 <li><a href="loans.html" class="nav-link"><i class="icon">💳</i> Loans</a></li>
             </ul>
         </nav>
-        
         <main class="main-content">
-            <h1>Loans</h1>
-            
-            <div class="cards-grid">
-                <div class="card">
-                    <h3>Apply for Loan</h3>
-                    <input type="number" placeholder="Amount" class="input-field">
-                    <input type="number" placeholder="Collateral Amount" class="input-field">
-                    <button onclick="applyForLoan()">Apply</button>
-                </div>
+            <div class="header">
+                <h1>Loan Management Dashboard</h1>
+                <div id="wallet-status" class="status">Please connect your wallet</div>
+            </div>
 
-                <div class="card">
-                    <h3>Active Loans</h3>
-                    <div class="loan-item">
-                        <p>Loan Amount: 5 ETH</p>
-                        <p>Collateral: 7.5 ETH</p>
-                        <p>Interest Rate: 5.5%</p>
-                        <button onclick="repayLoan('1')">Repay</button>
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('lender')">Lender Dashboard</div>
+                <div class="tab" onclick="switchTab('borrower')">Borrower Dashboard</div>
+            </div>
+
+            <div id="lender-panel" class="panel active">
+                <div class="management-panel">
+                    <h2>Search & Manage</h2>
+                    <div class="search-section">
+                        <input type="number" id="pool-id-search" placeholder="Enter Pool ID">
+                        <button onclick="getPoolDetails()">Get Pool Details</button>
+                        <input type="number" id="loan-id-search" placeholder="Enter Loan Application ID">
+                        <button onclick="getApplicationDetails()">Get Loan Details</button>
                     </div>
+                    <div id="details-container"></div>
                 </div>
+            </div>
 
-                <div class="card">
-                    <h3>Loan History</h3>
-                    <button onclick="viewLoanHistory()">View History</button>
+            <div id="borrower-panel" class="panel">
+                <div class="management-panel">
+                    <h2>Apply for Loan</h2>
+                    <div class="borrower-form">
+                        <input type="number" id="borrow-pool-id" placeholder="Enter Pool ID">
+                        <input type="number" id="borrow-amount" placeholder="Amount in ETH">
+                        <select id="loan-duration">
+                            <option value="0">30 Days</option>
+                            <option value="1">60 Days</option>
+                            <option value="2">90 Days</option>
+                        </select>
+                        <input type="text" id="loan-purpose" placeholder="Loan Purpose">
+                        <button onclick="applyForLoan()">Apply for Loan</button>
+                    </div>
+                    <div class="loans-history">
+                        <h2>My Loans</h2>
+                        <div id="loans-container"></div>
+                    </div>
                 </div>
             </div>
         </main>
     </div>
-    <script src="/static/account.js"></script>
+
+    <script src="/static/loan.js"> </script>
 </body>
+
 </html>
