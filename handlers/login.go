@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -32,9 +31,9 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	userName := r.FormValue("userName")
 	password := r.FormValue("password")
 
-	// Debugging: Log the received form values
-	fmt.Println("Received username:", userName)
-	fmt.Println("Received password:", password)
+	// // Debugging: Log the received form values
+	// fmt.Println("Received username:", userName)
+	// fmt.Println("Received password:", password)
 
 	var hashedPassword string
 	var userId string

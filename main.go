@@ -25,6 +25,12 @@ func main() {
 	http.HandleFunc("/register", handlers.RegisterUserHandler)
 	http.HandleFunc("/login", handlers.LoginHandler)
 	http.HandleFunc("/account", handlers.HandleBankAccount)
+	http.HandleFunc("/wallet", handlers.HandleWallet)
+	http.HandleFunc("/assets", handlers.HandleAssets)
+	http.HandleFunc("/chamas", handlers.HandleChamas)
+	http.HandleFunc("/funds", handlers.HandleFunds)
+	http.HandleFunc("/transactions", handlers.HandleTransactions)
+	http.HandleFunc("/loans", handlers.HandleLoans)
 
 	log.Println("server started at port: http://localhost:1234")
 	log.Fatal(http.ListenAndServe(":1234", nil))
