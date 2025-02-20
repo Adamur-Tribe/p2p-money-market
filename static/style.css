@@ -25,14 +25,78 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background-color: var(--background);
-    color: var(--foreground);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  color: var(--text);
+  background: var(--background);
+  line-height: 1.5;
 }
+
+.top-bar {
+    background: var(--primary);
+    color: white;
+    padding: 0.5rem 0;
+    font-size: 0.875rem;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+  
+  .top-bar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .top-contact {
+    display: flex;
+    gap: 1.5rem;
+  }
+  
+  .top-contact a, .top-links a {
+    color: white;
+    text-decoration: none;
+  }
+  
+  .top-links {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+  }
+  
+  nav {
+    background: var(--card-bg);
+    padding: 1rem 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: bold;
+    font-size: 1.25rem;
+  }
+  
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+  }
+  
+  .nav-links a {
+    text-decoration: none;
+    color: var(--text);
+  }
+  
 .form-container {
     background-color: var(--card);
     padding: 2rem;
@@ -40,6 +104,7 @@ body {
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
     width: 400px;
+    margin: 0 auto ;
     height: 450px;
     display: flex;
     flex-direction: column;
@@ -131,10 +196,10 @@ button:hover {
     bottom: 0;
     left: 0;
     width: 100%;
-    background: rgba(255,255,255,0.1);
+    background:var(--background);
     backdrop-filter: blur(10px);
     padding: clamp(15px, 3vw, 20px) 0;
-    color: white;
+    color:var(--foreground);
     text-align: center;
     z-index: 20;
 }
@@ -157,7 +222,7 @@ button:hover {
 }
 
 .footer-links a {
-    color: rgb(10, 10, 10);
+    color: var(--foreground);
     text-decoration: none;
     font-size: clamp(12px, 2.5vw, 14px);
     opacity: 0.8;
@@ -185,13 +250,19 @@ button:hover {
 }
 
 /* Media Queries */
-@media screen and (max-width: 480px) {
-    .container {
-        margin: 10px auto 80px;
-    }
+@media screen and (max-width: 768px) {
+   
+   .top-bar .container{
+    flex-direction: column;
+   }
+
+   .footer-content{
+    flex-direction: column;
+    
+   }
 
     .site-footer {
-        padding: 10px 0;
+       margin: 0 auto;
     }
 
     .footer-links {
@@ -199,31 +270,10 @@ button:hover {
     }
 }
 
-@media screen and (max-width: 360px) {
-    body {
-        padding: 10px;
-    }
 
-    .container {
-        padding: 15px;
-    }
-
-    form input,
-    form button {
-        padding: 8px;
-        margin-bottom: 10px;
-    }
-}
-
-/* Handle very large screens */
-@media screen and (min-width: 1200px) {
-    .container {
-        max-width: 450px;
-    }
-}
 
 /* Handle landscape orientation on mobile */
-@media screen and (max-height: 600px) and (orientation: landscape) {
+/* @media screen and (max-height: 600px) and (orientation: landscape) {
     body {
         padding-top: 20px;
     }
@@ -231,4 +281,4 @@ button:hover {
     .container {
         margin: 60px auto 100px;
     }
-}
+} */
