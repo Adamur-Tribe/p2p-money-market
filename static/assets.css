@@ -1,12 +1,19 @@
 :root {
     /* White and Blue theme variables */
-    --background: #ffffff; /* White background */
-    --foreground: #000000; /* Black text */
-    --card: #f9fafb; /* Lighter white for cards */
-    --primary: #6366f1; /* Blue primary color */
-    --border: #e0e0e0; /* Light gray border */
-    --hover: #eef6ff; /* Light blue hover effect */
+    --background: #ffffff;
+    /* White background */
+    --foreground: #000000;
+    /* Black text */
+    --card: #f9fafb;
+    /* Lighter white for cards */
+    --primary: #6366f1;
+    /* Blue primary color */
+    --border: #e0e0e0;
+    /* Light gray border */
+    --hover: #eef6ff;
+    /* Light blue hover effect */
 }
+
 /* Dark theme */
 [data-theme="dark"] {
     --background: #0f172a;
@@ -36,14 +43,6 @@ body {
     min-height: 100vh;
 }
 
-
-/* .theme-toggle {
-    position: fixed;
-    top: 1rem;
-    right: 1rem;
-    z-index: 1000;
-} */
-
 .theme-toggle button {
     background: none;
     border: none;
@@ -53,15 +52,15 @@ body {
     border-radius: 50%;
     transition: background-color 0.3s;
 }
+
 .navs {
     display: flex;
     flex-direction: row;
-   position: absolute;
-   gap: 1rem;
-   top: 2rem;
-   right: 0.5rem;
+    position: absolute;
+    gap: 1rem;
+    top: 2rem;
+    right: 0.5rem;
 }
-
 
 .sidebar {
     width: 250px;
@@ -107,29 +106,45 @@ body {
     margin-top: 2rem;
 }
 
-.card {
-    padding: 1.5rem;
+.section {
+    padding: 0.5rem;
+    margin-bottom: -1rem;
     border-radius: 0.5rem;
     background-color: var(--card);
     border: 1px solid var(--border);
     transition: background-color 0.3s, border-color 0.3s;
 }
 
-.card h3 {
-    color: var(--primary);
-    margin-bottom: 0.5rem;
+.section input {
+    width: 100%;
+    padding: 0.55rem;
+    border-radius: 0.5rem;
+    margin-bottom: 2rem;
+
 }
 
-.card p {
-    margin-bottom: 1rem;
-    opacity: 0.8;
+.section button {
+    width: 100%;
+    /* margin: 100px 10px 0 0; */
+    border-top: 2rem;
+    padding: 0.75rem;
+    background-color: var(--primary);
+    color: white;
+    /* White text */
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: opacity 0.2s, background-color 0.2s;
 }
 
 button {
     width: 100%;
+    margin-bottom: 1rem;
+    border-top: 2rem;
     padding: 0.75rem;
-    background-color: var(--primary); /* Blue background */
-    color: white; /* White text */
+    background-color: var(--primary);
+    color: white;
+    /* White text */
     border: none;
     border-radius: 0.5rem;
     cursor: pointer;
@@ -137,7 +152,8 @@ button {
 }
 
 button:hover {
-    background-color: #0056b3; /* Darker blue on hover */
+    background-color: #0056b3;
+    /* Darker blue on hover */
     opacity: 1;
 }
 
@@ -159,11 +175,12 @@ button:hover {
     .navs {
         flex-direction: row;
         margin-bottom: 50px;
-        position:relative;
+        position: relative;
+        left: 1.5rem;
     }
+
     .container {
         flex-direction: column;
-     
 
     }
 
