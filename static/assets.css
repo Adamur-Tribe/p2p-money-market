@@ -1,0 +1,192 @@
+:root {
+    /* White and Blue theme variables */
+    --background: #ffffff;
+    /* White background */
+    --foreground: #000000;
+    /* Black text */
+    --card: #f9fafb;
+    /* Lighter white for cards */
+    --primary: #6366f1;
+    /* Blue primary color */
+    --border: #e0e0e0;
+    /* Light gray border */
+    --hover: #eef6ff;
+    /* Light blue hover effect */
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+    --background: #0f172a;
+    --foreground: #ffffff;
+    --card: #1e293b;
+    --primary: #818cf8;
+    --border: #333;
+    --hover: #6366f1;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+    background-color: var(--background);
+    color: var(--foreground);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.theme-toggle button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: background-color 0.3s;
+}
+
+.navs {
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    gap: 1rem;
+    top: 2rem;
+    right: 0.5rem;
+}
+
+.sidebar {
+    width: 250px;
+    padding: 2rem;
+    border-right: 1px solid var(--border);
+    background-color: var(--card);
+    transition: background-color 0.3s;
+}
+
+.sidebar-header h2 {
+    margin-bottom: 2rem;
+    color: var(--primary);
+}
+
+.nav-menu {
+    list-style: none;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    text-decoration: none;
+    border-radius: 0.5rem;
+    transition: background-color 0.2s;
+    color: var(--foreground);
+}
+
+.nav-link:hover {
+    background-color: var(--hover);
+}
+
+.main-content {
+    flex: 1;
+    padding: 2rem;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.section {
+    padding: 0.5rem;
+    margin-bottom: -1rem;
+    border-radius: 0.5rem;
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.section input {
+    width: 100%;
+    padding: 0.55rem;
+    border-radius: 0.5rem;
+    margin-bottom: 2rem;
+
+}
+
+.section button {
+    width: 100%;
+    /* margin: 100px 10px 0 0; */
+    border-top: 2rem;
+    padding: 0.75rem;
+    background-color: var(--primary);
+    color: white;
+    /* White text */
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: opacity 0.2s, background-color 0.2s;
+}
+
+button {
+    width: 100%;
+    margin-bottom: 1rem;
+    border-top: 2rem;
+    padding: 0.75rem;
+    background-color: var(--primary);
+    color: white;
+    /* White text */
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: opacity 0.2s, background-color 0.2s;
+}
+
+button:hover {
+    background-color: #0056b3;
+    /* Darker blue on hover */
+    opacity: 1;
+}
+
+.transaction-list,
+.loan-item {
+    margin-top: 1rem;
+}
+
+.transaction-item {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.transaction-item:last-child {
+    border-bottom: none;
+}
+
+@media (max-width: 768px) {
+    .navs {
+        flex-direction: row;
+        margin-bottom: 50px;
+        position: relative;
+        left: 1.5rem;
+    }
+
+    .container {
+        flex-direction: column;
+
+    }
+
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+}
