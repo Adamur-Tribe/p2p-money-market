@@ -4,18 +4,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loan Management Dashboard</title>
+    <title>Loan Dashboard</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/4.1.1/web3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
     <link rel="stylesheet" href="/static/loan.css">
+    <!-- <link rel="stylesheet" href="/static/styles.css"> -->
 </head>
 
-<body class="light-mode">
-    <div class="theme-toggle">
-        <button onclick="toggleTheme()" id="themeToggle">🌙</button>
-    </div>
-    <div class="wallet">
-        <button class="connect-wallet">Connect Wallet</button>
+<body>
+    <div class="top-bar">
+        <div class="top-contact">
+            <a href="tel:+254768744700">Support: +254 768744700</a>
+            <a href="mailto:victorpaularony@gmail.com">Email: victorpaularony@gmail.com</a>
+        </div>
+        <div class="top-links">
+            <a href="#twit">Careers</a>
+            <a href="#contact">Contact</a>
+
+        </div>
+        <div class="theme-toggle">
+            <button onclick="toggleTheme()" id="themeToggle">🌙</button>
+        </div>
+        <div class="wallet">
+            <button class="connect-wallet">Connect Wallet</button>
+        </div>
     </div>
     <div class="container">
         <nav class="sidebar">
@@ -33,7 +45,7 @@
         </nav>
         <main class="main-content">
             <div class="header">
-                <h1>Loan Management Dashboard</h1>
+                <h1>Loan Dashboard</h1>
                 <div id="wallet-status" class="status">Please connect your wallet</div>
             </div>
 
@@ -79,6 +91,7 @@
     </div>
 
     <script src="/static/loan.js"> </script>
+    <script src="/static/account.js"></script>
 </body>
 
 </html>
