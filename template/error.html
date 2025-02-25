@@ -1,15 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Error page</title>
     <link rel="stylesheet" href="/static/styles.css">
 </head>
+
 <body>
-    <h1>Error {{ .Code}}</h1>
-    <p> GO Back TO MAIN PAGE</p>
-    <a href="/">HOME PAGE</a>
+    <div class="top-bar">
+        <div class="top-contact">
+            <a href="tel:+254768744700">Support: +254 768744700</a>
+            <a href="mailto:victorpaularony@gmail.com">Email: victorpaularony@gmail.com</a>
+        </div>
+        <div class="top-links">
+            <a href="#twit">Careers</a>
+            <a href="#contact">Contact</a>
+
+        </div>
+        <div class="theme-toggle">
+            <button onclick="toggleTheme()" id="themeToggle">🌙</button>
+        </div>
+    </div>
+    <div class="container">
+        <div class="error">
+            <h1>Error {{ .Code}}</h1>
+            <p> GO Back TO MAIN PAGE</p>
+            <a href="/">HOME PAGE</a>
+        </div>
+    </div>
     <script src="/static/account.js"></script>
 </body>
+
 </html>
