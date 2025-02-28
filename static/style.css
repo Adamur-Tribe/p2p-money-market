@@ -66,6 +66,18 @@ body {
     gap: 1.5rem;
     align-items: center;
   }
+
+  .theme-toggle {
+    margin-left: auto;
+    margin-bottom: 0;
+}
+.theme-toggle button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background-color 0.3s;
+}
   
   nav {
     background: var(--card-bg);

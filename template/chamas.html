@@ -1,21 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Chamas - DeFi Banking</title>
+    <title>My Chamas</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.6.0/web3.min.js"></script>
     <link rel="stylesheet" href="/static/styles.css">
 </head>
+
 <body>
     <div class="top-bar">
         <div class="top-contact">
             <a href="tel:+254768744700">Support: +254 768744700</a>
             <a href="mailto:victorpaularony@gmail.com">Email: victorpaularony@gmail.com</a>
-        </div>
-        <div class="top-links">
-            <a href="#twit">Careers</a>
-            <a href="#contact">Contact</a>
-
         </div>
         <div class="theme-toggle">
             <button onclick="toggleTheme()" id="themeToggle">🌙</button>
@@ -27,7 +25,7 @@
     <div class="container">
         <nav class="sidebar">
             <div class="sidebar-header">
-                <h2>DeFi Banking</h2>
+                <a href="/account"><h2>Dashboard</h2></a>
             </div>
             <ul class="nav-menu">
                 <li><a href="/chamas" class="nav-link"><i class="icon">👥</i> My Chamas</a></li>
@@ -38,31 +36,179 @@
                 <li><a href="/loans" class="nav-link"><i class="icon">💳</i> Loans</a></li>
             </ul>
         </nav>
-        
+
         <main class="main-content">
-            <h1>My Chamas</h1>
-            
-            <div class="cards-grid">
-                <div class="card">
-                    <h3>Create New Chama</h3>
-                    <p>Start your own investment group</p>
-                    <button onclick="createChama()">Create Chama</button>
-                </div>
 
-                <div class="card">
-                    <h3>Tech Investors Group</h3>
-                    <p>Members: 15 | Balance: 5 ETH</p>
-                    <button onclick="viewChama('tech')">View Details</button>
-                </div>
+            <h1>Chama Management Interface</h1>
 
-                <div class="card">
-                    <h3>Real Estate Fund</h3>
-                    <p>Members: 25 | Balance: 12 ETH</p>
-                    <button onclick="viewChama('realestate')">View Details</button>
-                </div>
+            <!-- Create Chama -->
+            <div>
+                <h2>Create Chama</h2>
+                <input id="chamaName" type="text" placeholder="Chama Name" required>
+                <input id="minimumContribution" type="number" placeholder="Minimum Contribution" required>
+                <input id="registrationFee" type="number" placeholder="Registration Fee" required>
+                <button onclick="createChama()">Create Chama</button>
             </div>
+
+            <!-- Contribute to Chama -->
+            <div>
+                <h2>Contribute to Chama</h2>
+                <input id="chamaId" type="number" placeholder="Chama ID" required>
+                <input id="contributionAmount" type="number" placeholder="Contribution Amount (ETH)" required>
+                <button onclick="contribute()">Contribute</button>
+            </div>
+
+            <!-- Get Chama Details -->
+            <div>
+                <h2>Get Chama Details</h2>
+                <form id="chamaDetailsForm" onsubmit="getChamaDetails(event)">
+                    <input id="getChamaId" type="number" placeholder="Chama ID" required>
+                    <button type="submit">Get Details</button>
+                </form>
+                <table id="chamaDetailsTable" style="display:none;">
+                    <thead>
+                        <tr>
+                            <th>Chairperson</th>
+                            <th>Chama Name</th>
+                            <th>Minimum Contribution</th>
+                            <th>Registration Fee</th>
+                            <th>Is Active</th>
+                            <th>Member Count</th>
+                            <th>Balance</th>
+                            <th>Penalty Amount</th>
+                            <th>Total Profits</th>
+                            <th>Termination Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="chamaDetails"></tbody>
+                </table>
+            </div>
+
+            <!-- Vote on Development -->
+            <div>
+                <h2>Vote on Development</h2>
+                <input id="proposalId" type="number" placeholder="Proposal ID" required>
+                <input id="voteSupport" type="text" placeholder="Support (true/false)" required>
+                <button onclick="voteOnDevelopment()">Vote</button>
+            </div>
+
+            <!-- Request Emergency Withdrawal -->
+            <div>
+                <h2>Request Emergency Withdrawal</h2>
+                <input id="withdrawChamaId" type="number" placeholder="Chama ID" required>
+                <input id="withdrawAmount" type="number" placeholder="Amount" required>
+                <input id="withdrawReason" type="text" placeholder="Reason" required>
+                <button onclick="requestEmergencyWithdrawal()">Request Withdrawal</button>
+            </div>
+
+            <!-- Accept Invitation -->
+            <div>
+                <h2>Accept Invitation</h2>
+                <input id="inviteChamaId" type="number" placeholder="Chama ID" required>
+                <input id="uniqueName" type="text" placeholder="Unique Name" required>
+                <button onclick="acceptInvitation()">Accept Invitation</button>
+            </div>
+
+            <!-- Approve Funding -->
+            <div>
+                <h2>Approve Funding</h2>
+                <input id="approveFundingChamaId" type="number" placeholder="Chama ID" required>
+                <input id="approveProposalId" type="number" placeholder="Proposal ID" required>
+                <button onclick="approveFunding()">Approve Funding</button>
+            </div>
+
+            <!-- Approve Withdrawal -->
+            <div>
+                <h2>Approve Withdrawal</h2>
+                <input id="approveWithdrawalChamaId" type="number" placeholder="Chama ID" required>
+                <input id="approveRequestId" type="number" placeholder="Request ID" required>
+                <button onclick="approveWithdrawal()">Approve Withdrawal</button>
+            </div>
+
+            <!-- Assign Admin -->
+            <div>
+                <h2>Assign Admin</h2>
+                <input id="assignAdminChamaId" type="number" placeholder="Chama ID" required>
+                <input id="adminAddress" type="text" placeholder="Admin Address" required>
+                <input id="adminRole" type="number" placeholder="Role (0, 1, 2...)" required>
+                <button onclick="assignAdmin()">Assign Admin</button>
+            </div>
+
+            <!-- Distribute Profits -->
+            <div>
+                <h2>Distribute Profits</h2>
+                <input id="distributeProfitsChamaId" type="number" placeholder="Chama ID" required>
+                <input id="profitsAmount" type="number" placeholder="Amount" required>
+                <button onclick="distributeProfits()">Distribute Profits</button>
+            </div>
+
+            <!-- Propose Development -->
+            <div>
+                <h2>Propose Development</h2>
+                <input id="proposeChamaId" type="number" placeholder="Chama ID" required>
+                <input id="developmentTitle" type="text" placeholder="Title" required>
+                <input id="developmentDescription" type="text" placeholder="Description" required>
+                <input id="requestedAmount" type="number" placeholder="Requested Amount" required>
+                <button onclick="proposeDevelopment()">Propose Development</button>
+            </div>
+
+            <!-- Send Invitation -->
+            <div>
+                <h2>Send Invitation</h2>
+                <input id="sendInvitationChamaId" type="number" placeholder="Chama ID" required>
+                <input id="inviteMemberAddress" type="text" placeholder="Member Address" required>
+                <button onclick="sendInvitation()">Send Invitation</button>
+            </div>
+
+            <!-- Get Accepted Members -->
+            <div>
+                <h2>Get Accepted Members</h2>
+                <input id="getAcceptedMembersChamaId" type="number" placeholder="Chama ID" required>
+                <button onclick="getAcceptedMembers()">Get Accepted Members</button>
+                <table id="acceptedMembersTable" style="display:none;">
+                    <thead>
+                        <tr>
+                            <th>Accepted Members</th>
+                        </tr>
+                    </thead>
+                    <tbody id="acceptedMembers"></tbody>
+                </table>
+            </div>
+
+            <!-- Get User Chamas -->
+            <div>
+                <h2>Get User Chamas</h2>
+                <input id="userAddress" type="text" placeholder="User Address" required>
+                <button onclick="getUserChamas()">Get User Chamas</button>
+                <table id="userChamasTable" style="display:none;">
+                    <thead>
+                        <tr>
+                            <th>Chama IDs</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userChamas"></tbody>
+                </table>
+            </div>
+
+            <!-- Get Pending Members -->
+            <div>
+                <h2>Get Pending Members</h2>
+                <input id="getPendingMembersChamaId" type="number" placeholder="Chama ID" required>
+                <button onclick="getPendingMembers()">Get Pending Members</button>
+                <table id="pendingMembersTable" style="display:none;">
+                    <thead>
+                        <tr>
+                            <th>Pending Members</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pendingMembers"></tbody>
+                </table>
+            </div>
+ 
         </main>
     </div>
+    <script src="/static/chama.js"></script>
     <script src="/static/account.js"></script>
 </body>
+
 </html>

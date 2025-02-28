@@ -43,45 +43,6 @@ body {
 }
 
 
-.top-bar {
-    background: var(--primary);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: white;
-    padding: 0.5rem 0;
-    font-size: 0.875rem;
-}
-
-.top-contact {
-    display: flex;
-    gap: 1.5rem;
-}
-
-.top-contact a,
-.top-links a {
-    color: white;
-    text-decoration: none;
-}
-
-.top-links {
-    display: flex;
-    gap: 1.5rem;
-    align-items: center;
-}
-
-.theme-toggle button {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    margin-right: 35px;
-    cursor: pointer;
-    padding: 0.5rem;
-    border-radius: 50%;
-    transition: background-color 0.3s;
-}
-
-
 .sidebar {
     width: 250px;
     padding: 2rem;
