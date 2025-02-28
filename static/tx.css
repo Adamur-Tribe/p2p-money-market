@@ -37,6 +37,45 @@ body {
 }
 
 
+.top-bar {
+    background: var(--primary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    padding: 0.5rem 0;
+    font-size: 0.875rem;
+}
+
+.top-contact {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.top-contact a,
+.top-links a {
+    color:var(--background);
+    text-decoration: none;
+}
+
+.top-links {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.theme-toggle button {
+    background: var(--primary);
+    border: none;
+    font-size: 1.5rem;
+    margin-right: 35px;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: background-color 0.3s;
+}
+
+
 
 .theme-toggle button {
     background: none;
@@ -105,7 +144,7 @@ input {
     border-radius: 0.375rem;
 }
 
-select #network {
+select {
     padding: 0.75rem;
     border: 1px solid var(--border);
     border-radius: 0.375rem;
@@ -115,7 +154,7 @@ select #network {
 button {
     padding: 0.75rem;
     background-color: var(--primary); 
-    color: white; 
+    color:var(--background); 
     border: none;
     border-radius: 0.5rem;
     cursor: pointer;
@@ -147,7 +186,7 @@ td {
 
 th {
     background-color:var(--primary);
-    color: var(--foreground);
+    color: var(--background);
 }
 
 a {
@@ -163,10 +202,24 @@ a {
         margin-bottom: 50px;
         position:relative;
     }
+    .top-bar {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: center;
+    }
+    .top-contact{
+        flex-direction: column;
+        align-items: center;
+
+    }
+
     .container {
         flex-direction: column;
-     
-
+    }
+   
+    table{
+        font-size: small;
+        margin: 0;
     }
 
     .sidebar {

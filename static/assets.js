@@ -507,3 +507,4 @@ document.getElementById("viewTempLockDetailsButton").addEventListener("click", a
         alert("Error fetching Temp Lock details.");
     }
 });
+

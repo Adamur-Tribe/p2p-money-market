@@ -12,6 +12,7 @@
     /* Light gray border */
     --hover: #eef6ff;
     /* Light blue hover effect */
+    --wallet: orange;
 }
 
 /* Dark theme */
@@ -42,15 +43,24 @@ body {
     display: flex;
     min-height: 100vh;
 }
-
+.theme-toggle {
+    margin-left: auto;
+    margin-bottom: 0;
+}
 .theme-toggle button {
     background: none;
     border: none;
-    font-size: 1.5rem;
     cursor: pointer;
-    padding: 0.5rem;
     border-radius: 50%;
     transition: background-color 0.3s;
+}
+
+
+.wallet button{
+    color: var(--foreground);
+    background: var(--wallet);
+    margin-right: 20px;
+    
 }
 
 .navs {
@@ -60,6 +70,35 @@ body {
     gap: 1rem;
     top: 2rem;
     right: 0.5rem;
+}
+
+
+.top-bar {
+    background: var(--primary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--background);
+    padding: 0.5rem 0;
+    font-size: 0.875rem;
+}
+
+.top-contact {
+    display: flex;
+    gap: 1.5rem;
+    margin-left: 20px;
+}
+
+.top-contact a,
+.top-links a {
+    color: white;
+    text-decoration: none;
+}
+
+.top-links {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
 }
 
 .sidebar {
@@ -124,27 +163,19 @@ body {
 }
 
 .section button {
-    width: 100%;
-    /* margin: 100px 10px 0 0; */
-    border-top: 2rem;
     padding: 0.75rem;
     background-color: var(--primary);
-    color: white;
-    /* White text */
+    color: var(--background);
     border: none;
     border-radius: 0.5rem;
     cursor: pointer;
     transition: opacity 0.2s, background-color 0.2s;
 }
 
-button {
-    width: 100%;
-    margin-bottom: 1rem;
-    border-top: 2rem;
+button { 
     padding: 0.75rem;
-    background-color: var(--primary);
-    color: white;
-    /* White text */
+    background-color: var(--background);
+    color: var(--foreground);
     border: none;
     border-radius: 0.5rem;
     cursor: pointer;
@@ -153,7 +184,6 @@ button {
 
 button:hover {
     background-color: #0056b3;
-    /* Darker blue on hover */
     opacity: 1;
 }
 
@@ -177,6 +207,16 @@ button:hover {
         margin-bottom: 50px;
         position: relative;
         left: 1.5rem;
+    }
+    .top-bar {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: center;
+    }
+    .top-contact{
+        flex-direction: column;
+        align-items: center;
+
     }
 
     .container {

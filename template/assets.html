@@ -8,20 +8,23 @@
     <link rel="stylesheet" href="/static/assets.css">
 </head>
 
-<body class="light-mode">
-    <div class="navs">
+<body >
+    <div class="top-bar">
+        <div class="top-contact">
+            <a href="tel:+254768744700">Support: +254 768744700</a>
+            <a href="mailto:victorpaularony@gmail.com">Email: victorpaularony@gmail.com</a>
+        </div>
         <div class="theme-toggle">
             <button onclick="toggleTheme()" id="themeToggle">🌙</button>
         </div>
         <div class="wallet">
-            <button id="connectButton">Connect Wallet</button>
+            <button class="connect-wallet">Connect Wallet</button>
         </div>
     </div>
-    
     <div class="container">
         <nav class="sidebar">
             <div class="sidebar-header">
-                <h2>DeFi Banking</h2>
+                <a href="/account"><h2>Dashboard</h2></a>
             </div>
             <ul class="nav-menu">
                 <li><a href="/chamas" class="nav-link"><i class="icon">👥</i> My Chamas</a></li>
@@ -87,6 +90,7 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/web3@1.7.0/dist/web3.min.js"></script>
     <script src="/static/assets.js"></script>
+    <script src="/static/account.js"></script>
 </body>
 
 </html>

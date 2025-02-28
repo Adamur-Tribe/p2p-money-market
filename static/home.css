@@ -18,19 +18,53 @@
   --card-bg: #1e293b;
 }
 
-/* Theme toggle styles */
-.theme-toggle {
-  /* background: none; */
-  border: none;
-  padding: 0.5rem;
-  cursor: pointer;
-  color: var(--secondary);
+
+.top-bar {
+  width: 100%;
+  background: var(--primary);
   display: flex;
+  align-items: center;
+  color: var(--background);
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  gap: 1.5rem;
+  justify-content: space-between;
+}
+
+.top-contact {
+  display: flex;
+  gap: 1.5rem;
+  margin-left: 20px;
+}
+
+.top-contact a,
+.top-links a {
+  color: var(--background);
+  text-decoration: none;
+}
+
+.top-links {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.theme-toggle {
+  margin-left: auto;
+  margin-bottom: 0;
+}
+
+.theme-toggle button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color 0.3s;
 }
 
 .theme-toggle img {
   width: 24px;
-  
+
   height: 24px;
   display: block;
 }
@@ -73,32 +107,11 @@ body {
   padding: 0 1rem;
 }
 
-.top-bar .container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.top-contact {
-  display: flex;
-  gap: 1.5rem;
-}
-
-.top-contact a, .top-links a {
-  color: white;
-  text-decoration: none;
-}
-
-.top-links {
-  display: flex;
-  gap: 1.5rem;
-  align-items: center;
-}
 
 nav {
   background: var(--card-bg);
   padding: 1rem 0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .nav-container {
@@ -127,6 +140,8 @@ nav {
 }
 
 button {
+  color: var(--background);
+  background: var(--primary);
   padding: 0.75rem 1.5rem;
   border-radius: 0.5rem;
   border: none;
@@ -176,7 +191,7 @@ main {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0, 0, 0, 0.4);
 }
 
 .slide-content {
@@ -247,7 +262,7 @@ main {
   text-decoration: none;
   color: var(--text);
   transition: transform 0.3s;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .action-card:hover {
@@ -276,7 +291,7 @@ main {
   background: var(--card-bg);
   padding: 2rem;
   border-radius: 1rem;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   text-align: left;
 }
 
@@ -298,7 +313,7 @@ main {
   background: var(--card-bg);
   padding: 2rem;
   border-radius: 1rem;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .stat-value {
@@ -319,7 +334,7 @@ main {
   padding: 4rem 2rem;
   background: var(--card-bg);
   border-radius: 1rem;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .waitlist-content {
@@ -428,9 +443,19 @@ footer {
 }
 
 @media (max-width: 768px) {
-  .nav-links {
-    display: none;
+  .container {
+    display: inline-flex;
+    flex-direction: column;
   }
+  .nav-links {
+    font-size: 1rem;
+    font-weight: bold;
+    flex-direction: column;
+  }
+.logo span{
+  font-weight:bolder;
+  font-size: 2rem;
+}
 
   .mobile-menu-btn {
     display: flex;
@@ -444,19 +469,36 @@ footer {
     flex-direction: column;
     gap: 0.5rem;
   }
-  .quick-actions{
-    flex-direction: column;
-    top: 95px;
-    bottom: 30px;
-  }
-  .waitlist{
+
+  .quick-actions {
     flex-direction: column;
     top: 95px;
     bottom: 30px;
   }
 
+  .waitlist {
+    flex-direction: column;
+    top: 95px;
+    bottom: 30px;
+  }
+
+  .top-bar {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
   .top-contact {
     flex-direction: column;
     align-items: center;
+
+  }
+
+  .theme-toggle {
+    margin: auto;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background-color 0.3s;
   }
 }
