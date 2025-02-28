@@ -1,21 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Money Market Funds - DeFi Banking</title>
     <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="/static/fund.css">
 </head>
+
 <body>
     <div class="top-bar">
         <div class="top-contact">
             <a href="tel:+254768744700">Support: +254 768744700</a>
             <a href="mailto:victorpaularony@gmail.com">Email: victorpaularony@gmail.com</a>
-        </div>
-        <div class="top-links">
-            <a href="#twit">Careers</a>
-            <a href="#contact">Contact</a>
-
         </div>
         <div class="theme-toggle">
             <button onclick="toggleTheme()" id="themeToggle">🌙</button>
@@ -27,7 +25,7 @@
     <div class="container">
         <nav class="sidebar">
             <div class="sidebar-header">
-                <h2>DeFi Banking</h2>
+                <a href="/account"><h2>Dashboard</h2></a>
             </div>
             <ul class="nav-menu">
                 <li><a href="/chamas" class="nav-link"><i class="icon">👥</i> My Chamas</a></li>
@@ -38,33 +36,122 @@
                 <li><a href="/loans" class="nav-link"><i class="icon">💳</i> Loans</a></li>
             </ul>
         </nav>
-        
+
         <main class="main-content">
             <h1>Money Market Funds</h1>
-            
-            <div class="cards-grid">
-                <div class="card">
-                    <h3>Stable Yield Fund</h3>
-                    <p>APY: 8.5%</p>
-                    <p>Total Value: $5M</p>
-                    <button onclick="investInFund('stable')">Invest</button>
+
+            <div class="tabs">
+                <button class="tab active" onclick="showSection('manager')">Fund Manager</button>
+                <button class="tab" onclick="showSection('investor')">Investor</button>
+            </div>
+
+            <!-- Fund Manager Section -->
+            <div id="manager-section">
+                <div class="grid">
+                    <div class="card">
+                        <h2>Create New Fund</h2>
+                        <form id="create-fund-form">
+                            <div class="form-group">
+                                <label>Fund Name</label>
+                                <input type="text" id="fund-name" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Investment Account</label>
+                                <input type="text" id="investment-account" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Dividend Period (in seconds)</label>
+                                <input type="number" id="dividend-period" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Initial Minimum Investment (ETH)</label>
+                                <input type="number" id="initial-min-investment" step="0.001" required>
+                            </div>
+                            <button type="submit">Create Fund</button>
+                        </form>
+                    </div>
+
+                    <div class="card">
+                        <h2>Manage Existing Fund</h2>
+                        <div class="form-group">
+                            <label>Select Fund</label>
+                            <select id="manager-fund-select"></select>
+                        </div>
+                        <div class="manage-fund">
+                            <button onclick="distributeDividends()">Distribute Dividends</button>
+                            <button onclick="toggleFundStatus()">Toggle Fund Status</button>
+                            <button onclick="chargeManagementFee()">Charge Management Fee</button>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="card">
-                    <h3>High Yield Fund</h3>
-                    <p>APY: 12.3%</p>
-                    <p>Total Value: $2.8M</p>
-                    <button onclick="investInFund('high')">Invest</button>
+                <div class="card-fund">
+                    <h2>Fund Investors</h2>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Address</th>
+                                <th>Invested Amount</th>
+                                <th>Shares</th>
+                            </tr>
+                        </thead>
+                        <tbody id="investors-list"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Investor Section -->
+            <div id="investor-section" class="hidden">
+                <div class="grid">
+                    <div class="card">
+                        <h2>Available Funds</h2>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Fund Name</th>
+                                    <th>Total Assets</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="available-funds"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <h2>Make Investment</h2>
+                        <form id="invest-form">
+                            <div class="form-group">
+                                <label>Select Fund</label>
+                                <select id="investor-fund-select"></select>
+                            </div>
+                            <div class="form-group">
+                                <label>Investment Amount (ETH)</label>
+                                <input type="number" id="investment-amount" step="0.001" required>
+                            </div>
+                            <button type="submit">Invest</button>
+                        </form>
+                    </div>
                 </div>
 
-                <div class="card">
-                    <h3>My Investments</h3>
-                    <p>View your fund investments</p>
-                    <button onclick="viewInvestments()">View Details</button>
+                <div class="card-fund">
+                    <h2>Your Investments</h2>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Fund Name</th>
+                                <th>Invested Amount</th>
+                                <th>Shares</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="your-investments"></tbody>
+                    </table>
                 </div>
             </div>
         </main>
     </div>
     <script src="/static/account.js"></script>
+    <script src="/static/funds.js"></script>
 </body>
+
 </html>
