@@ -1,393 +1,481 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-//contract for lending and borrowing
-contract MicroLending {
-    //defining the loa struct
-    struct Loan {
-        address payable lender; //owner of the loan
-        address borrower;
-        uint loanAmount;
-        uint interestRate;
-        uint loanTerm; //duration for loan payment
-        uint dueDate;
-        uint amountRepaid;
-        uint penaltyRate;
-        bool active;
-        bool repaid;
-         uint startTime;
-        uint monthlyCheckpoint;
-        uint originalAmount;
-        uint applicationId;
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/security/Pausable.sol";
+
+// npm install
+// import "@openzeppelin/contracts-upgradeable";
+//this is a contract for the mmf funding pool of the z banking
+contract MoneyMarketFund is ReentrancyGuard, Ownable, Pausable {
+    //mmf funding pool to tract all the created mmf funds by their managers
+    struct Fund {
+        address mmfManager;
+        address investmentAccount;
+        string mmfName;
+        uint256 totalAssets;
+        uint256 currentInvestors;
+        uint256 creationTime;
+        uint256 dividendPeriod;
+        uint256 lastDividendTime;
+        bool isActive;
+        mapping(address => Investor) investors;
+        address[] investorList;
+    }
+    //the investors struct to truck all the investors acts within the mmf
+    struct Investor {
+        uint256 investedAmount;
+        uint256 shares;
+        uint256 lastDepositTime;
+        uint256 lastDividendClaimed;
+        bool exists;
+        bool hasMetInitialInvestment; // Track if investor has met initial minimum
     }
 
-    //defining the loan aplication struct
-      struct LoanApplication {
-        bool openApp;
-        uint applicationId;
-        address borrower;
-        uint duration;
-        uint creditAmount;
-        uint interestRate;
-        string otherData;
-    }
+    // Constants that are predifined for the contract
+    uint256 public constant MIN_INVESTMENT = 0.0001 ether; //for the investors joining the mmf
+    uint256 public constant INITIAL_FUNDING = 0.01 ether; //for the fund managers
+    uint256 public constant MAX_INVESTORS = 1000;
+    uint256 public constant INITIAL_SHARE_PRICE = 1e18; // 1 ETH = 1 share initially
+    uint256 public constant MANAGEMENT_FEE_PERCENTAGE = 1; // Example 1% state to change
 
-    //defining the lender struct
-    struct Lender {
-        string name;
-        address lenderWallet;
-        bool active;
-    }
+    // State variables of the mmf contract
+    mapping(uint256 => Fund) public funds;
+    uint256 public totalFunds;
 
-    //defining the borrower strucct
-    struct Borrower {
-        string name;
-        address borrowerWallet;
-        bool active;
-    }
-
-    //the state variables defination
-    //mapping the  address to store borower and lenders info
-    mapping(address => Borrower) public borrowers;
-    mapping(address => Lender) public lenders;
-    mapping(address => Loan[]) public borrowerLoans; // loan for each borrower
-    mapping(address => Loan[]) public lenderLoans; //Loans for each lender
-    mapping(address => uint) public balance;
-    mapping(address => bool) public hasOngoingLoan;
-    mapping(address => bool) public hasOngoingApplication;
-    mapping(address => bool) public hasOngoingInvestment;
-    mapping(uint => LoanApplication) public applications;
-    
-    uint public numOfApplications;
-    uint public numLoans;
-
-    //define the events for the contract
-    event LoanRequested(
-        address borrower,
-        uint amount,
-        uint interestRate,
-        uint term
+    // Events to manage the functions of the contract
+    event FundCreated(
+        uint256 indexed fundId,
+        string mmfName,
+        address manager,
+        uint256 initialMinInvestment
     );
-    event Repayment(address borrower, uint amount, uint loanIndex);
-    event LoanApproved(
-        address lender,
-        address borrower,
-        uint amount,
-        uint dueDte
+    event InvestmentMade(
+        uint256 indexed fundId,
+        address investor,
+        uint256 amount,
+        uint256 shares
     );
-    event LoanCLosed(address borrower, uint loanIndex);
-    event Penatly(address borrower, uint amount, uint loanIndex);
-    event ApplicationCreated(
-        uint applicationId, 
-        address borrower, 
-        uint amount
-    ); //for tracking new applications
+    event WithdrawalMade(
+        uint256 indexed fundId,
+        address investor,
+        uint256 amount,
+        uint256 shares
+    );
+    event DividendDistributed(uint256 indexed fundId, uint256 amount);
+    event FundStatusChanged(uint256 indexed fundId, bool isActive);
+    event TopUpReceived(
+        uint256 indexed fundId,
+        address indexed from,
+        uint256 amount
+    );
 
-    //modifers definition for the contract access
-    modifier OnlyLender(address lender) {
-        require(
-            msg.sender == lender,
-            "Only the lender can make these modification. "
-        );
+    constructor() Ownable(msg.sender) Pausable() {}
+
+    // Modifiers of the contract to define the access of the functionalities of the contract
+    modifier onlyFundManager(uint256 _fundId) {
+        require(funds[_fundId].mmfManager == msg.sender, "Not fund manager");
         _;
     }
 
-    modifier OnlyBorrower(address borrower) {
-        require(
-            msg.sender == borrower,
-            "Only the borrower can perform this action. "
-        );
+    modifier fundExists(uint256 _fundId) {
+        require(_fundId < totalFunds, "Fund does not exist");
         _;
     }
 
-    //contract functions definations
-
-    //function to enable regiser of lender accounts
-    function createLender(string memory _name) external  {
-        require(!lenders[msg.sender].active, "Lender already exists");
-        Lender memory lender;
-        lenders[msg.sender] = lender;//update lender to lenders map
-        lender.name = _name;
-        lender.lenderWallet = msg.sender;
-        lender.active = true;
-        balance[msg.sender] = 0; //initial balance to zero during registration
+    modifier fundActive(uint256 _fundId) {
+        require(funds[_fundId].isActive, "Fund is not active");
+        _;
     }
 
-    //function to enable regiser of borrower accounts
-    function createBorrower(string memory _name) external  {
-        require(!borrowers[msg.sender].active, "Borrower already exists");
-        Borrower memory borrower;
-        borrowers[msg.sender] = borrower;//update borrower to borrowers map
-        borrower.name = _name;
-        borrower.borrowerWallet = msg.sender;
-        borrower.active = true;
-        balance[msg.sender] = 0; //initial balance to zero during registration
-    }
-
-    // Function to register Lender and Deposit Funds to there account
-    function registerLender() external payable {
-        require(msg.value > 0, "Lender must deposit funds to become eligible to lend.");
-        require(lenders[msg.sender].active, "You must create a lender account first.");
-        balance[msg.sender] += msg.value;  // Add deposit to lender balance
-    }
-
-     // New function to create loan application
-    function createApplication(
-        uint duration,
-        uint interestRate,
-        uint creditAmount,
-        string memory otherData
-    ) external {
-        require(!hasOngoingLoan[msg.sender], "Already has an ongoing loan");
-        require(!hasOngoingApplication[msg.sender], "Already has an ongoing application");
-        require(borrowers[msg.sender].active, "Must be a registered borrower");
-
-        applications[numOfApplications] = LoanApplication({
-            openApp: true,
-            applicationId: numOfApplications,
-            borrower: msg.sender,
-            duration: duration,
-            creditAmount: creditAmount,
-            interestRate: interestRate,
-            otherData: otherData
-        });
-
-        numOfApplications += 1;
-        hasOngoingApplication[msg.sender] = true;
-        
-        emit ApplicationCreated(numOfApplications - 1, msg.sender, creditAmount);
-    }
-
-        // Function to get loan applications info as by the borrowers
-    function getApplicationData(uint index) external view returns (
-        uint[] memory numericalData,
-        string memory otherData,
-        address borrower
-    ) {
-        LoanApplication storage app = applications[index];
-        uint[] memory data = new uint[](4);
-        data[0] = index;
-        data[1] = app.duration;
-        data[2] = app.creditAmount;
-        data[3] = app.interestRate;
-        
-        return (data, app.otherData, app.borrower);
-    }
-
-    // Check if application is open
-    function isApplicationOpen(uint index) public view returns (bool) {
-        return applications[index].openApp;
-    }
-
-    // Check if loan is open
-    function isLoanOpen(uint loanIndex) public view returns (bool) {
-        require(loanIndex < borrowerLoans[msg.sender].length, "Invalid loan index");
-        return borrowerLoans[msg.sender][loanIndex].active;
-    }
-
-
-    //function to register borrower and enable them to ask for loan
-    function requestLoan(uint _amount) external {
-        uint256 _interestRate = 2;
-        uint256 _term = 2;
-        uint256 _penaltyRate = 2;
-
+    // Updated createFund function with initialMinInvestment parameter and the mmf pools by the managers
+    function createFund(
+        string memory _mmfName,
+        address _investmentAccount,
+        uint256 _dividendPeriod,
+        uint256 _initialMinInvestment
+    ) external returns (uint256) {
+        require(_investmentAccount != address(0), "Invalid investment account");
+        require(_dividendPeriod > 0, "Invalid dividend period");
         require(
-            _amount > 0, 
-            "Loan amount must be great  than zero"
-        );
-        require(borrowers[msg.sender].active, "You must create a borrower account first.");
-
-        //updating the state of the cotract of the loan
-        Loan memory newLoan = Loan({
-            loanAmount: _amount,
-            interestRate: _interestRate,
-            loanTerm: _term,
-            dueDate: block.timestamp + (_term * 1 days),// Loan due date set by loan term
-            amountRepaid: 0,
-            penaltyRate: _penaltyRate,
-            borrower: msg.sender,
-            lender: payable(address(0)),//initially, no lender assiged to this untill approvall
-            active: false,
-            repaid: false,
-            startTime: block.timestamp,
-            monthlyCheckpoint: 0,
-            originalAmount: _amount,
-            applicationId: numOfApplications
-        });
-
-        //add newLoan to the loan array/list
-        borrowerLoans[msg.sender].push(newLoan);
-
-        //logging the function event
-        emit LoanRequested(msg.sender, _amount, _interestRate, _term);
-    }
-
-    //function to check the loan legibility and approve the loan
-    function approveLoan(
-        address borrower,
-        uint loanIndex
-    ) external payable OnlyLender(msg.sender) {
-        require(
-            loanIndex < borrowerLoans[borrower].length,
-            "Invalid loan index"
-        );
-
-        //get the loan to be approved from the loan map
-        Loan storage loan = borrowerLoans[borrower][loanIndex];
-        require(
-            loan.active == false, 
-            "Loan is already active."
+            _initialMinInvestment > 0,
+            "Initial minimum investment must be greater than 0"
         );
         require(
-            msg.value == loan.loanAmount,
-            "Lender must deposit the exact loan amount."
+            _initialMinInvestment > INITIAL_FUNDING,
+            "Initial minimum investment must be greater than MIN_INVESTMENT"
         );
 
-        //updating the state of the contract
-        uint loanAmount = msg.value;
-        uint totalLoanOwned = loanAmount + (loanAmount * loan.interestRate) / 100;
-        loan.loanAmount += totalLoanOwned;
-        loan.lender = payable(msg.sender);
-        loan.active = true;
-        //transfare from lender to borrower
-        balance[msg.sender] -= msg.value;
-        balance[borrower] += totalLoanOwned;
+        uint256 fundId = totalFunds++;
+        Fund storage newFund = funds[fundId];
 
-        //logging the fuction
-        emit LoanApproved(msg.sender, borrower, msg.value, loan.dueDate);
+        newFund.mmfManager = msg.sender;
+        newFund.investmentAccount = _investmentAccount;
+        newFund.mmfName = _mmfName;
+        newFund.investorList = new address[](0);
+        newFund.creationTime = block.timestamp;
+        newFund.dividendPeriod = _dividendPeriod;
+        newFund.lastDividendTime = block.timestamp;
+        newFund.isActive = true;
+        // newFund.initialMinInvestment = _initialMinInvestment;
+
+        newFund.totalAssets += _initialMinInvestment;
+
+        //logging of the events of the function
+        emit FundCreated(fundId, _mmfName, msg.sender, _initialMinInvestment);
+        return fundId;
     }
 
-    //function to anable the loaned to make repayment of the loan
-    function loanrepayment(
-        uint loanIndex
-    ) external payable OnlyBorrower(msg.sender) {
-        require(
-            loanIndex < borrowerLoans[msg.sender].length,
-            "Invalid loan index."
-        );
+    // Updated invest function with initial investment check
+    function invest(uint256 _fundId, uint256 _initialInvestment)
+        external
+        payable
+        nonReentrant
+        fundExists(_fundId)
+        fundActive(_fundId)
+    {
+        Fund storage fund = funds[_fundId];
+        require(fund.currentInvestors < MAX_INVESTORS, "Fund is full");
 
-        Loan storage loan = borrowerLoans[msg.sender][loanIndex];
-        require(loan.active == true, "Loan is not active.");
-        require(msg.value > 0, "Repayment amount must be greater than zero.");
+        Investor storage investor = fund.investors[msg.sender];
 
-        
-        //update the repayment
-        loan.amountRepaid += msg.value;
-        loan.loanAmount -= msg.value;
-        balance[msg.sender] -= msg.value;
-        balance[loan.lender] += msg.value;
+        // Check if the investor already exists
+        require(!investor.exists, "You already have an account in this fund");
 
-        //check if there is penalty application to the borrower
-        if (block.timestamp > loan.dueDate) {
-            //calculate the penalty for the borrower
-            uint penalty = (msg.value * loan.penaltyRate) / 10000;
-            //update the borrower and lender balance
-            balance[loan.lender] += penalty;
-            balance[msg.sender] -= penalty;
-            emit Penatly(msg.sender, penalty, loanIndex);
+        // Check initial investment minimum only for new investors and not depositing nil
+        _initialInvestment = msg.value;
+
+        if (!investor.exists) {
+            require(
+                _initialInvestment > MIN_INVESTMENT,
+                "Initial minimum investment must be greater than MIN_INVESTMENT"
+            );
+            investor.hasMetInitialInvestment = true;
         }
 
-        //check if the loan if already paid by the borrower
-        if (loan.amountRepaid == 0) {
-            loan.active = false;
-            loan.repaid = true;
-            hasOngoingLoan[msg.sender] = false;
-            hasOngoingApplication[msg.sender] = false;
-            hasOngoingInvestment[loan.lender] = false;
-            emit LoanCLosed(msg.sender, loanIndex);
+        uint256 shares = calculateShares(fund, _initialInvestment);
+
+        // If new investor, add to investor list
+        if (!investor.exists) {
+            fund.investorList.push(msg.sender);
+            fund.currentInvestors++;
+            investor.exists = true;
         }
 
-        emit Repayment(msg.sender, msg.value, loanIndex);
+        investor.investedAmount += _initialInvestment; //for tracking the total amount invested to the mmf
+        investor.shares += shares;
+        investor.lastDepositTime = block.timestamp;
+        fund.totalAssets += _initialInvestment;
+
+        // Transfer investment from the investor account to investment account the mmf
+        (bool success, ) = fund.investmentAccount.call{
+            value: _initialInvestment
+        }("");
+        require(success, "Investment transfer failed");
+
+        emit InvestmentMade(_fundId, msg.sender, _initialInvestment, shares);
     }
 
-    //function to get the loan details
-    //  function getLoanDetails(address borrower, uint256 loanIndex) external view returns (Loan memory) {
-    //     require(
-    //         loanIndex < borrowerLoans[borrower].length,
-    //         "Invalid loan index."
-    //         );
-    //     return borrowerLoans[borrower][loanIndex];
-    // }
+    // Updated topUpInvestment function with no minimum
+    function topUpInvestment(uint256 _fundId)
+        external
+        payable
+        nonReentrant
+        fundExists(_fundId)
+        fundActive(_fundId)
+    {
+        require(msg.value > 0, "Top-up amount must be greater than 0");
+
+        Fund storage fund = funds[_fundId];
+        Investor storage investor = fund.investors[msg.sender];
+
+        // Require that the investor already exists
+        require(investor.exists, "No account for this address");
+
+        // Require that investor has already met initials investment
+        require(
+            investor.hasMetInitialInvestment,
+            "Must make initial investment first"
+        );
+
+        uint256 shares = calculateShares(fund, msg.value);
+
+        investor.investedAmount += msg.value;
+        investor.shares += shares;
+        investor.lastDepositTime = block.timestamp;
+        fund.totalAssets += msg.value;
+
+        // Transfer to investment account
+        (bool success, ) = fund.investmentAccount.call{value: msg.value}("");
+        require(success, "Top-up transfer failed");
+
+        emit TopUpReceived(_fundId, msg.sender, msg.value);
+    }
+
+    // Updated managerTopUp function with no minimum
+    function managerTopUp(uint256 _fundId)
+        external
+        payable
+        nonReentrant
+        fundExists(_fundId)
+        onlyFundManager(_fundId)
+    {
+        require(msg.value > 0, "Top-up amount must be greater than 0");
+
+        Fund storage fund = funds[_fundId];
+
+        fund.totalAssets += msg.value;
+
+        // Transfer to investment account
+        (bool success, ) = fund.investmentAccount.call{value: msg.value}("");
+        require(success, "Manager top-up transfer failed");
+
+        emit TopUpReceived(_fundId, msg.sender, msg.value);
+    }
+
+    // Helper function to calculate shares
+    function calculateShares(Fund storage fund, uint256 amount)
+        internal
+        view
+        returns (uint256)
+    {
+        if (fund.totalAssets == 0) {
+            return (amount * INITIAL_SHARE_PRICE) / 1 ether;
+        } else {
+            return (amount * fund.totalAssets) / fund.totalAssets;
+        }
+    }
+
+    //Allow investors to withdraw their investments or a portion of their investments, along with any accumulated dividends or shares.
+    function withdraw(uint256 _fundId, uint256 _amount)
+        external
+        nonReentrant
+        fundExists(_fundId)
+        fundActive(_fundId)
+    {
+        Fund storage fund = funds[_fundId];
+        Investor storage investor = fund.investors[msg.sender];
+
+        require(investor.exists, "Investor does not exist");
+        require(
+            investor.investedAmount >= _amount,
+            "Insufficient funds to withdraw"
+        );
+
+        uint256 sharesToWithdraw = calculateShares(fund, _amount);
+
+        // Deduct the amount and shares from the investor
+        investor.investedAmount -= _amount;
+        investor.shares -= sharesToWithdraw;
+        fund.totalAssets -= _amount;
+
+        // Transfer the amount back to the investor
+        (bool success, ) = msg.sender.call{value: _amount}("");
+        require(success, "Withdrawal transfer failed");
+
+        emit WithdrawalMade(_fundId, msg.sender, _amount, sharesToWithdraw);
+    }
+
+    // To distribute dividends to investors (based on their shares)
+    //using of the chainlink keeper
+    function distributeDividends(uint256 _fundId)
+        external
+        onlyFundManager(_fundId)
+        nonReentrant
+        fundExists(_fundId)
+    {
+        Fund storage fund = funds[_fundId];
+        require(fund.totalAssets > 0, "No assets to distribute");
+         require(block.timestamp >= fund.lastDividendTime + fund.dividendPeriod, "Dividend distribution period not reached");
     
-    //function to get the borrower's loan balance
-    function getLoanBlanace(uint _loanIndex) external view OnlyBorrower(msg.sender) returns (uint){
-        require(_loanIndex < borrowerLoans[msg.sender].length, "Invalid loan Index");
 
-        //get the loan of the borrower by the index
+        uint256 totalDividend = fund.totalAssets;
 
-        Loan memory loan = borrowerLoans[msg.sender][_loanIndex];
-        uint totalLoan = loan.loanAmount + (loan.loanAmount* loan.interestRate) / 100;
-        uint amountOwed = totalLoan - loan.amountRepaid;
+        // Loop through each investor and distribute dividends based on their shares
+        for (uint256 i = 0; i < fund.investorList.length; i++) {
+            address investorAddr = fund.investorList[i];
+            Investor storage investor = fund.investors[investorAddr];
 
-        //calculate the loan penalty if overdue by date
-        if (block.timestamp > loan.dueDate && !loan.repaid){
-            uint penalty = (amountOwed * loan.penaltyRate)/ 10000;
-            amountOwed += penalty;
+            uint256 investorDividend = (investor.shares * totalDividend) /
+                fund.totalAssets;
+
+            // Transfer the dividends to the investor
+            (bool success, ) = investorAddr.call{value: investorDividend}("");
+            require(success, "Dividend transfer failed");
+
+            emit DividendDistributed(_fundId, investorDividend);
         }
 
-        return amountOwed;
+        fund.lastDividendTime = block.timestamp;
     }
 
-    //function to get the lenders balances
-    // function getLenderBalance() external view returns (uint256) {
-    //     return lender[msg.sender];
-    // }
+    //this function allows the investors to claim their share of the dividends separately
+    // (rather than automatically distributing to all investors at once).
+    function claimDividend(uint256 _fundId)
+        external
+        nonReentrant
+        fundExists(_fundId)
+        fundActive(_fundId)
+    {
+        Fund storage fund = funds[_fundId];
+        Investor storage investor = fund.investors[msg.sender];
 
-    // //function to get the borrower's balances
-    // function getBorrowerBalance() external view returns (uint256) {
-    //     return borrowerBalance[msg.sender];
-    // }
+        require(investor.exists, "Investor does not exist");
 
-    // Function to withdraw balance
-    // function withdraw(uint amount) external returns (uint) {
-    //     require(amount <= balance[msg.sender], "Insufficient balance");
-    //     balance[msg.sender] -= amount;
-    //     payable(msg.sender).transfer(amount);
-    //     return amount;
-    // }
+        // Calculate dividends based on investor's shares and total assets
+        uint256 dividendAmount = (investor.shares * fund.totalAssets) /
+            fund.totalAssets;
 
+        // Ensure the investor is eligible for a dividend
+        require(dividendAmount > 0, "No dividends to claim");
 
-     //function to get the lenders and borrowers balances
-    function getLenderBalance() external view returns (uint256) {
-        return balance[msg.sender];
+        // Transfer the dividend to the investor
+        (bool success, ) = msg.sender.call{value: dividendAmount}("");
+        require(success, "Dividend transfer failed");
+
+        emit DividendDistributed(_fundId, dividendAmount);
     }
 
-    //function to get the loan detais info
-    function getLoanInfo(
-        uint loanIndex
-    )
+    //Fund Status Management
+    //function to pause or unpause a fund,
+    //giving the owner or manager the ability to freeze or resume the investment activities.
+    function setFundStatus(uint256 _fundId, bool _status)
+        external
+        onlyFundManager(_fundId)
+    {
+        Fund storage fund = funds[_fundId];
+        fund.isActive = _status;
+
+        emit FundStatusChanged(_fundId, _status);
+    }
+
+    //Function Emergency Pause
+    //  emergency pause functionality that can stop critical functions in case of a security issue.
+    function emergencyPause() external onlyOwner {
+        _pause(); // Pauses the contract
+    }
+
+    function emergencyUnpause() external onlyOwner {
+        _unpause(); // Resumes the contract
+    }
+
+    //function for the Management Fees
+    //the MMF Fund managers could earn a percentage of the fund for their services.
+
+    function chargeManagementFee(uint256 _fundId)
+        external
+        onlyFundManager(_fundId)
+        nonReentrant
+    {
+        Fund storage fund = funds[_fundId];
+        uint256 managementFee = (fund.totalAssets * MANAGEMENT_FEE_PERCENTAGE) /
+            100;
+
+        fund.totalAssets -= managementFee;
+
+        // Transfer the management fee to the fund manager
+        (bool success, ) = fund.mmfManager.call{value: managementFee}("");
+        require(success, "Fee transfer to the manager account failed");
+
+        emit TopUpReceived(_fundId, fund.mmfManager, managementFee); // Log the fee transfer
+    }
+
+    //function to  Allow Fund Manager to View All Investors
+    // Function for Fund Manager to view all investors in a fund
+    function getAllInvestors(uint256 _fundId)
         external
         view
-        returns (
-            address lender,
-            address borrower,
-            uint loanAmount,
-            uint interestRate,
-            uint loanTerm,
-            uint dueDate,
-            uint amountRepaid,
-            uint penaltyRate,
-            bool active
-        )
+        onlyFundManager(_fundId)
+        returns (address[] memory, uint256[] memory)
     {
-        require(
-            loanIndex < borrowerLoans[msg.sender].length,
-            "Invalid loan index"
-        );
-        Loan storage loan = borrowerLoans[msg.sender][loanIndex];
-        return (
-            loan.lender,
-            loan.borrower,
-            loan.loanAmount,
-            loan.interestRate,
-            loan.loanTerm,
-            loan.dueDate,
-            loan.amountRepaid,
-            loan.penaltyRate,
-            loan.active
-        );
+        Fund storage fund = funds[_fundId];
+        uint256 investorCount = fund.investorList.length;
+
+        // Create arrays to hold investor addresses and their invested amounts
+        address[] memory investors = new address[](investorCount);
+        uint256[] memory investedAmounts = new uint256[](investorCount);
+
+        for (uint256 i = 0; i < investorCount; i++) {
+            address investorAddress = fund.investorList[i];
+            Investor storage investor = fund.investors[investorAddress];
+            investors[i] = investorAddress;
+            investedAmounts[i] = investor.investedAmount;
+        }
+
+        return (investors, investedAmounts);
     }
 
-    //end
+    //function to  show all the open MMFs to an investor
+    //This will help the investor see which MMFs are available for investment.
+    function getOpenFunds()
+        external
+        view
+        returns (uint256[] memory openFunds, string[] memory mmfNames)
+    {
+        uint256 openFundsCount = 0;
+
+        // First, count how many open funds there are within the network
+        for (uint256 i = 0; i < totalFunds; i++) {
+            if (funds[i].isActive) {
+                openFundsCount++;
+            }
+        }
+
+        // Create an arrays to hold the fund IDs and names of all the open funds
+        openFunds = new uint256[](openFundsCount);
+        mmfNames = new string[](openFundsCount);
+
+        uint256 j = 0;
+        for (uint256 i = 0; i < totalFunds; i++) {
+            if (funds[i].isActive) {
+                openFunds[j] = i;
+                mmfNames[j] = funds[i].mmfName;
+                j++;
+            }
+        }
+
+        return (openFunds, mmfNames);
+    }
+
+    // Function for an investor to view their MMF details and activities
+    //only the ones the investor is in 
+    function getInvestorFundDetails(uint256 _fundId)
+        external
+        view
+        fundExists(_fundId)
+        returns (
+            string memory mmfName,
+            uint256 totalAssets,
+            uint256 currentInvestors,
+            uint256 investedAmount,
+            uint256 shares,
+            uint256 lastDepositTime,
+            uint256 lastDividendClaimed
+        )
+    {
+        Fund storage fund = funds[_fundId];
+        Investor storage investor = fund.investors[msg.sender];
+
+        // this ensure that the investor exists in the fund
+        require(investor.exists, "Investor does not exist in this MMF fund");
+
+        mmfName = fund.mmfName;
+        totalAssets = fund.totalAssets;
+        currentInvestors = fund.currentInvestors;
+        investedAmount = investor.investedAmount;
+        shares = investor.shares;
+        lastDepositTime = investor.lastDepositTime;
+        lastDividendClaimed = investor.lastDividendClaimed;
+
+        return (
+            mmfName,
+            totalAssets,
+            currentInvestors,
+            investedAmount,
+            shares,
+            lastDepositTime,
+            lastDividendClaimed
+        );
+    }
 }
